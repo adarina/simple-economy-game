@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.adabawolska.simpleeconomygamespringboot.building.entity.Building;
+import pl.adabawolska.simpleeconomygamespringboot.building.entity.BuildingBuilder;
 import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
 import pl.adabawolska.simpleeconomygamespringboot.resource.entity.ResourceBuilder;
 import pl.adabawolska.simpleeconomygamespringboot.resource.service.ResourceService;
@@ -44,8 +46,9 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody CreateUserRequest request, UriComponentsBuilder builder) {
         Resource resourceDefault = ResourceBuilder.aResource().defaultBuild();
+        Building buildingDefault = BuildingBuilder.aBuilding().defaultBuild();
         User user = CreateUserRequest
-                .dtoToEntityMapper(resourceDefault)
+                .dtoToEntityMapper(resourceDefault, buildingDefault)
                 .apply(request);
         if (userService.find(user.getId()).isPresent()) {
             return ResponseEntity.notFound().build();

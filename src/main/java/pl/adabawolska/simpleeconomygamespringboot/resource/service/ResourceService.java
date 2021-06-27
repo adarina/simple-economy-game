@@ -9,7 +9,6 @@ import pl.adabawolska.simpleeconomygamespringboot.user.repository.UserRepository
 
 import java.util.Optional;
 
-
 @Service
 public class ResourceService {
 

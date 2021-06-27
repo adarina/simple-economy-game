@@ -1,6 +1,7 @@
 package pl.adabawolska.simpleeconomygamespringboot.user.dto;
 
 import lombok.*;
+import pl.adabawolska.simpleeconomygamespringboot.building.entity.Building;
 import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
 import pl.adabawolska.simpleeconomygamespringboot.user.entity.User;
 
@@ -24,12 +25,13 @@ public class CreateUserRequest {
 
     private Resource resource;
 
-    public static Function<CreateUserRequest, User> dtoToEntityMapper(Resource resource) {
+    public static Function<CreateUserRequest, User> dtoToEntityMapper(Resource resource, Building building) {
         return request -> User.builder()
                 .id(request.getId())
                 .username(request.getUsername())
                 .password(request.getPassword())
                 .resource(resource)
+                .building(building)
                 .build();
     }
 }

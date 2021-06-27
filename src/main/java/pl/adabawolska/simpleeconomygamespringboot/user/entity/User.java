@@ -34,9 +34,9 @@ public class User implements Serializable {
 
     /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_id", referencedColumnName = "id")
-    private Unit unit;
+    private Unit unit;*/
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "building_id", referencedColumnName = "id")
-    private Building building;*/
+    private Building building;
 }

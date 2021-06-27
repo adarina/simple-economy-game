@@ -1,6 +1,7 @@
 package pl.adabawolska.simpleeconomygamespringboot.user.dto;
 
 import lombok.*;
+import pl.adabawolska.simpleeconomygamespringboot.building.entity.Building;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +29,8 @@ public class GetUsersResponse {
 
         private String username;
 
+        private Building building;
+
     }
 
     @Singular
@@ -41,6 +44,7 @@ public class GetUsersResponse {
                     .map(user -> User.builder()
                             .id(user.getId())
                             .username(user.getUsername())
+                            .building(user.getBuilding())
                             .build())
                     .forEach(response::user);
             return response.build();
