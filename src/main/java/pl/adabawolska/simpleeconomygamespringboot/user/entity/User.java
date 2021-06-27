@@ -22,7 +22,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     private String username;
 
@@ -32,11 +32,11 @@ public class User implements Serializable {
     @JoinColumn(name = "resource_id", referencedColumnName = "id")
     private Resource resource;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_id", referencedColumnName = "id")
     private Unit unit;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "building_id", referencedColumnName = "id")
-    private Building building;
+    private Building building;*/
 }

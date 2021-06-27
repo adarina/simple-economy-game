@@ -19,8 +19,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> find(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<User> find(Long id) {
+        return userRepository.findById(id);
     }
 
     public List<User> findAll() {
@@ -31,4 +31,5 @@ public class UserService {
     public User create(User user) {
         return userRepository.save(user);
     }
+
 }

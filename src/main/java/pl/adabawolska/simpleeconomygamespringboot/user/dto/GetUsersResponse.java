@@ -24,7 +24,10 @@ public class GetUsersResponse {
     @EqualsAndHashCode
     public static class User {
 
+        private Long id;
+
         private String username;
+
     }
 
     @Singular
@@ -36,6 +39,7 @@ public class GetUsersResponse {
             GetUsersResponseBuilder response = GetUsersResponse.builder();
             users.stream()
                     .map(user -> User.builder()
+                            .id(user.getId())
                             .username(user.getUsername())
                             .build())
                     .forEach(response::user);
