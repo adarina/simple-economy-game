@@ -18,6 +18,14 @@ GET http://localhost:8080/api/users/2/buildings
 
 ###
 
+GET http://localhost:8080/api/users/1/units
+
+###
+
+GET http://localhost:8080/api/users/2/units
+
+###
+
 POST http://localhost:8080/api/users
 Content-Type: application/json
 
@@ -37,8 +45,19 @@ Content-Type: application/json
   "stoneQuarry": 0,
   "huntersHut": 0,
   "goblinsCavern": true,
-  "orcsPit": true,
-  "trollsCave": true
+  "orcsPit": false,
+  "trollsCave": false
+}
+
+###
+
+PUT http://localhost:8080/api/users/1/units
+Content-Type: application/json
+
+{
+  "goblinArcherQuantity": 1,
+  "orcWarriorQuantity": 0,
+  "uglyTrollQuantity": 0
 }
 
 ###

@@ -9,13 +9,14 @@ import pl.adabawolska.simpleeconomygamespringboot.building.entity.BuildingBuilde
 import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
 import pl.adabawolska.simpleeconomygamespringboot.resource.entity.ResourceBuilder;
 import pl.adabawolska.simpleeconomygamespringboot.resource.service.ResourceService;
+import pl.adabawolska.simpleeconomygamespringboot.unit.entity.Unit;
+import pl.adabawolska.simpleeconomygamespringboot.unit.entity.UnitBuilder;
 import pl.adabawolska.simpleeconomygamespringboot.user.dto.CreateUserRequest;
 import pl.adabawolska.simpleeconomygamespringboot.user.dto.GetUserResponse;
 import pl.adabawolska.simpleeconomygamespringboot.user.dto.GetUsersResponse;
 import pl.adabawolska.simpleeconomygamespringboot.user.entity.User;
 import pl.adabawolska.simpleeconomygamespringboot.user.service.UserService;
 
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/users")
@@ -47,8 +48,9 @@ public class UserController {
     public ResponseEntity<Void> createUser(@RequestBody CreateUserRequest request, UriComponentsBuilder builder) {
         Resource resourceDefault = ResourceBuilder.aResource().defaultBuild();
         Building buildingDefault = BuildingBuilder.aBuilding().defaultBuild();
+        Unit unitDefault = UnitBuilder.anUnit().defaultBuild();
         User user = CreateUserRequest
-                .dtoToEntityMapper(resourceDefault, buildingDefault)
+                .dtoToEntityMapper(resourceDefault, buildingDefault, unitDefault)
                 .apply(request);
         if (userService.find(user.getId()).isPresent()) {
             return ResponseEntity.notFound().build();

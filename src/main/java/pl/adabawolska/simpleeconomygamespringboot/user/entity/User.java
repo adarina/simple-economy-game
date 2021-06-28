@@ -32,9 +32,9 @@ public class User implements Serializable {
     @JoinColumn(name = "resource_id", referencedColumnName = "id")
     private Resource resource;
 
-    /*@OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_id", referencedColumnName = "id")
-    private Unit unit;*/
+    private Unit unit;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "building_id", referencedColumnName = "id")
