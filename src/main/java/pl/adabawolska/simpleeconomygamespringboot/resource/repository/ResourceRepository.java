@@ -7,4 +7,6 @@ import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
 @Repository
 public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
+    Resource findByUserId(Long userId);
+
 }

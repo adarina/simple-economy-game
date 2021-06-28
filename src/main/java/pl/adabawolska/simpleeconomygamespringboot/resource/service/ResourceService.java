@@ -26,8 +26,37 @@ public class ResourceService {
         return resourceRepository.findById(id);
     }
 
+    public Resource findResourceByUserId(Long id) {
+        return resourceRepository.findByUserId(id);
+    }
+
     @Transactional
     public Resource create(Resource resource) {
         return resourceRepository.save(resource);
+    }
+
+    @Transactional
+    public Resource update(Resource resource) {
+        return resourceRepository.save(resource);
+    }
+
+    public void changeMudQuantity(Long id, Long mudQtyToAdd) {
+        Resource resource = resourceRepository.findByUserId(id);
+        if (resource.getMudQuantity() + mudQtyToAdd < 0) {
+            resource.setMudQuantity(0L);
+        } else {
+            resource.setMudQuantity(resource.getMudQuantity() + mudQtyToAdd);
+        }
+        resourceRepository.save(resource);
+    }
+
+    public void changeStoneQuantity(Long id, Long stoneQtyToAdd) {
+        Resource resource = resourceRepository.findByUserId(id);
+        if (resource.getStoneQuantity() + stoneQtyToAdd < 0) {
+            resource.setStoneQuantity(0L);
+        } else {
+            resource.setStoneQuantity(resource.getStoneQuantity() + stoneQtyToAdd);
+        }
+        resourceRepository.save(resource);
     }
 }

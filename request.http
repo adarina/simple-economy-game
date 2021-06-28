@@ -29,6 +29,20 @@ Content-Type: application/json
 
 ###
 
+PUT http://localhost:8080/api/users/1/buildings
+Content-Type: application/json
+
+{
+  "mudGatherersCottage": 0,
+  "stoneQuarry": 0,
+  "huntersHut": 0,
+  "goblinsCavern": true,
+  "orcsPit": true,
+  "trollsCave": true
+}
+
+###
+
 POST http://localhost:8080/api/users
 Content-Type: application/json
 

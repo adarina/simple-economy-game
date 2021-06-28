@@ -7,4 +7,5 @@ import pl.adabawolska.simpleeconomygamespringboot.building.entity.Building;
 @Repository
 public interface BuildingRepository extends JpaRepository<Building, Long> {
 
+    Building findByUserId(Long userId);
 }

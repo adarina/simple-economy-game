@@ -15,9 +15,9 @@ public class ResourceBuilder {
 
     public Resource defaultBuild() {
         Resource resource = new Resource();
-        resource.setMudQuantity(100L);
-        resource.setStoneQuantity(0L);
-        resource.setMeatQuantity(0L);
+        resource.setMudQuantity(30000L);
+        resource.setStoneQuantity(30000L);
+        resource.setMeatQuantity(30000L);
         resource.setUser(user);
         return resource;
     }
