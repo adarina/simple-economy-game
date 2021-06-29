@@ -14,26 +14,26 @@ import java.util.function.BiFunction;
 @EqualsAndHashCode
 public class UpdateBuildingRequest {
 
-    private Long mudGatherersCottage;
+    private Long mudGatherersCottageQuantity;
 
-    private Long stoneQuarry;
+    private Long stoneQuarryQuantity;
 
-    private Long huntersHut;
+    private Long huntersHutQuantity;
 
-    private boolean goblinsCavern;
+    private boolean goblinsCavernOwnership;
 
-    private boolean orcsPit;
+    private boolean orcsPitOwnership;
 
-    private boolean trollsCave;
+    private boolean trollsCaveOwnership;
 
     public static BiFunction<Building, UpdateBuildingRequest, Building> dtoToEntityUpdater() {
         return (building, request) -> {
-            building.setMudGatherersCottageQuantity(request.getMudGatherersCottage());
-            building.setStoneQuarryQuantity(request.getStoneQuarry());
-            building.setHuntersHutQuantity(request.getHuntersHut());
-            building.setGoblinsCavernOwnership(request.isGoblinsCavern());
-            building.setOrcsPitOwnership(request.isOrcsPit());
-            building.setTrollsCaveOwnership(request.isTrollsCave());
+            building.setMudGatherersCottageQuantity(request.getMudGatherersCottageQuantity());
+            building.setStoneQuarryQuantity(request.getStoneQuarryQuantity());
+            building.setHuntersHutQuantity(request.getHuntersHutQuantity());
+            building.setGoblinsCavernOwnership(request.isGoblinsCavernOwnership());
+            building.setOrcsPitOwnership(request.isOrcsPitOwnership());
+            building.setTrollsCaveOwnership(request.isTrollsCaveOwnership());
             return building;
         };
     }

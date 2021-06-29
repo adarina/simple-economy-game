@@ -2,6 +2,10 @@ GET http://localhost:8080/api/users
 
 ###
 
+GET http://localhost:8080/api/users/1
+
+###
+
 GET http://localhost:8080/api/users/1/resources
 
 ###
@@ -41,12 +45,12 @@ PUT http://localhost:8080/api/users/1/buildings
 Content-Type: application/json
 
 {
-  "mudGatherersCottage": 0,
-  "stoneQuarry": 0,
-  "huntersHut": 0,
-  "goblinsCavern": true,
-  "orcsPit": false,
-  "trollsCave": false
+  "mudGatherersCottageQuantity": 1,
+  "stoneQuarryQuantity": 1,
+  "huntersHutQuantity": 1,
+  "goblinsCavernOwnership": true,
+  "orcsPitOwnership": false,
+  "trollsCaveOwnership": false
 }
 
 ###

@@ -45,6 +45,10 @@ public class UnitService {
         return unitRepository.findById(id);
     }
 
+    public Unit findUnitByUserId(Long id) {
+        return unitRepository.findByUserId(id);
+    }
+
     public boolean canRecruit(UpdateUnitRequest unit, Long id) {
 
         Unit unitPrevious = unitRepository.findByUserId(id);
@@ -79,5 +83,9 @@ public class UnitService {
     @Transactional
     public void update(Unit unit) {
         unitRepository.save(unit);
+    }
+
+    public Unit saveUnit(Unit unit) {
+        return unitRepository.save(unit);
     }
 }

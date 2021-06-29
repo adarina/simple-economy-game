@@ -59,4 +59,8 @@ public class ResourceService {
         }
         resourceRepository.save(resource);
     }
+
+    public Resource saveResource(Resource resource) {
+        return resourceRepository.save(resource);
+    }
 }

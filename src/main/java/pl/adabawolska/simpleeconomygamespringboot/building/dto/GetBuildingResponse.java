@@ -14,26 +14,26 @@ import java.util.function.Function;
 @EqualsAndHashCode
 public class GetBuildingResponse {
 
-    private Long mudGatherersCottage;
+    private Long mudGatherersCottageQuantity;
 
-    private Long stoneQuarry;
+    private Long stoneQuarryQuantity;
 
-    private Long huntersHut;
+    private Long huntersHutQuantity;
 
-    private boolean goblinsCavern;
+    private boolean goblinsCavernOwnership;
 
-    private boolean orcsPit;
+    private boolean orcsPitOwnership;
 
-    private boolean trollsCave;
+    private boolean trollsCaveOwnership;
 
     public static Function<Building, GetBuildingResponse> entityToDtoMapper() {
         return building -> GetBuildingResponse.builder()
-                .mudGatherersCottage(building.getMudGatherersCottageQuantity())
-                .stoneQuarry(building.getStoneQuarryQuantity())
-                .huntersHut(building.getHuntersHutQuantity())
-                .goblinsCavern(building.isGoblinsCavernOwnership())
-                .orcsPit(building.isOrcsPitOwnership())
-                .trollsCave(building.isTrollsCaveOwnership())
+                .mudGatherersCottageQuantity(building.getMudGatherersCottageQuantity())
+                .stoneQuarryQuantity(building.getStoneQuarryQuantity())
+                .huntersHutQuantity(building.getHuntersHutQuantity())
+                .goblinsCavernOwnership(building.isGoblinsCavernOwnership())
+                .orcsPitOwnership(building.isOrcsPitOwnership())
+                .trollsCaveOwnership(building.isTrollsCaveOwnership())
                 .build();
     }
 }
