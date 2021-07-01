@@ -22,16 +22,16 @@ public class Unit {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "goblin_archer_quantity")
-    private Long goblinArcherQuantity;
+    @Column(name = "type")
+    private String type;
 
-    @Column(name = "orc_warrior_quantity")
-    private Long orcWarriorQuantity;
+    @Column(name = "amount")
+    private Long amount;
 
-    @Column(name = "ugly_troll_quantity")
-    private Long uglyTrollQuantity;
+    @Column(name = "active")
+    private Boolean active;
 
-    @OneToOne(mappedBy = "unit")
-    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user")
     private User user;
 }

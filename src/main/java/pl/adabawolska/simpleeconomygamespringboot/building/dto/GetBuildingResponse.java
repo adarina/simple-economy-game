@@ -14,26 +14,17 @@ import java.util.function.Function;
 @EqualsAndHashCode
 public class GetBuildingResponse {
 
-    private Long mudGatherersCottageQuantity;
+    private Long id;
 
-    private Long stoneQuarryQuantity;
+    private String type;
 
-    private Long huntersHutQuantity;
-
-    private boolean goblinsCavernOwnership;
-
-    private boolean orcsPitOwnership;
-
-    private boolean trollsCaveOwnership;
+    private Long userId;
 
     public static Function<Building, GetBuildingResponse> entityToDtoMapper() {
         return building -> GetBuildingResponse.builder()
-                .mudGatherersCottageQuantity(building.getMudGatherersCottageQuantity())
-                .stoneQuarryQuantity(building.getStoneQuarryQuantity())
-                .huntersHutQuantity(building.getHuntersHutQuantity())
-                .goblinsCavernOwnership(building.isGoblinsCavernOwnership())
-                .orcsPitOwnership(building.isOrcsPitOwnership())
-                .trollsCaveOwnership(building.isTrollsCaveOwnership())
-                .build();
+                    .id(building.getId())
+                    .type(building.getType())
+                    .userId(building.getUser().getId())
+                    .build();
     }
 }

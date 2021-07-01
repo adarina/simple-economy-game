@@ -14,17 +14,15 @@ import java.util.function.BiFunction;
 @EqualsAndHashCode
 public class UpdateUnitRequest {
 
-    private Long goblinArcherQuantity;
+    private String type;
 
-    private Long orcWarriorQuantity;
+    private Long amount;
 
-    private Long uglyTrollQuantity;
+    private Boolean active;
 
     public static BiFunction<Unit, pl.adabawolska.simpleeconomygamespringboot.unit.dto.UpdateUnitRequest, Unit> dtoToEntityUpdater() {
         return (unit, request) -> {
-            unit.setGoblinArcherQuantity(request.getGoblinArcherQuantity());
-            unit.setOrcWarriorQuantity(request.getOrcWarriorQuantity());
-            unit.setUglyTrollQuantity(request.getUglyTrollQuantity());
+            unit.setAmount(request.getAmount());
             return unit;
         };
     }

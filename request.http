@@ -14,7 +14,7 @@ GET http://localhost:8080/api/users/2/resources
 
 ###
 
-GET http://localhost:8080/api/users/1/buildings
+GET http://localhost:8080/api/users/1/buildings/
 
 ###
 
@@ -41,27 +41,67 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:8080/api/users/1/buildings
+POST http://localhost:8080/api/users/1/buildings
 Content-Type: application/json
 
 {
-  "mudGatherersCottageQuantity": 1,
-  "stoneQuarryQuantity": 1,
-  "huntersHutQuantity": 1,
-  "goblinsCavernOwnership": true,
-  "orcsPitOwnership": false,
-  "trollsCaveOwnership": false
+  "type": "COTTAGE"
 }
 
 ###
 
-PUT http://localhost:8080/api/users/1/units
+POST http://localhost:8080/api/users/1/buildings
 Content-Type: application/json
 
 {
-  "goblinArcherQuantity": 1,
-  "orcWarriorQuantity": 0,
-  "uglyTrollQuantity": 0
+  "type": "PIT"
+}
+
+###
+
+POST http://localhost:8080/api/users/1/buildings
+Content-Type: application/json
+
+{
+  "type": "QUARRY"
+}
+
+###
+
+POST http://localhost:8080/api/users/1/buildings
+Content-Type: application/json
+
+{
+  "type": "CAVERN"
+}
+
+###
+
+POST http://localhost:8080/api/users/1/buildings
+Content-Type: application/json
+
+{
+  "type": "CAVE"
+}
+
+###
+
+POST http://localhost:8080/api/users/1/resources
+Content-Type: application/json
+
+{
+  "id": 3,
+  "type": "helo"
+}
+
+###
+
+PUT http://localhost:8080/api/users/1/units/1
+Content-Type: application/json
+
+{
+  "type": "GOBLIN",
+  "amount": 2900
 }
 
 ###
@@ -70,7 +110,6 @@ POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-"id": 2,
-"username": "Ada",
-"password": "12384"
+  "username": "Ada",
+  "password": "12384"
 }

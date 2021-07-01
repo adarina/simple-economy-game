@@ -4,8 +4,6 @@ import pl.adabawolska.simpleeconomygamespringboot.user.entity.User;
 
 public class ResourceBuilder {
 
-    private User user;
-
     private ResourceBuilder() {
     }
 
@@ -13,11 +11,26 @@ public class ResourceBuilder {
         return new ResourceBuilder();
     }
 
-    public Resource defaultBuild() {
+    public Resource defaultBuildMudEntity(User user) {
         Resource resource = new Resource();
-        resource.setMudQuantity(30000L);
-        resource.setStoneQuantity(30000L);
-        resource.setMeatQuantity(30000L);
+        resource.setType("MUD");
+        resource.setAmount(100000L);
+        resource.setUser(user);
+        return resource;
+    }
+
+    public Resource defaultBuildStoneEntity(User user) {
+        Resource resource = new Resource();
+        resource.setType("STONE");
+        resource.setAmount(1000000L);
+        resource.setUser(user);
+        return resource;
+    }
+
+    public Resource defaultBuildMeatEntity(User user) {
+        Resource resource = new Resource();
+        resource.setType("MEAT");
+        resource.setAmount(1000000L);
         resource.setUser(user);
         return resource;
     }

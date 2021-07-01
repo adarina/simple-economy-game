@@ -1,6 +1,7 @@
 package pl.adabawolska.simpleeconomygamespringboot.unit.dto;
 
 import lombok.*;
+import pl.adabawolska.simpleeconomygamespringboot.building.entity.Building;
 import pl.adabawolska.simpleeconomygamespringboot.unit.entity.Unit;
 
 import java.util.function.Function;
@@ -14,17 +15,23 @@ import java.util.function.Function;
 @EqualsAndHashCode
 public class GetUnitResponse {
 
-    private Long goblinArcherQuantity;
+    private Long id;
 
-    private Long orcWarriorQuantity;
+    private String type;
 
-    private Long uglyTrollQuantity;
+    private Long amount;
+
+    private Boolean active;
+
+    private Long userId;
 
     public static Function<Unit, GetUnitResponse> entityToDtoMapper() {
         return unit -> GetUnitResponse.builder()
-                .goblinArcherQuantity(unit.getGoblinArcherQuantity())
-                .orcWarriorQuantity(unit.getOrcWarriorQuantity())
-                .uglyTrollQuantity(unit.getUglyTrollQuantity())
+                .id(unit.getId())
+                .type(unit.getType())
+                .amount(unit.getAmount())
+                .active(unit.getActive())
+                .userId(unit.getUser().getId())
                 .build();
     }
 }

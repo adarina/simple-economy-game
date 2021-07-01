@@ -7,6 +7,7 @@ import pl.adabawolska.simpleeconomygamespringboot.unit.entity.Unit;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,15 +29,15 @@ public class User implements Serializable {
 
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "resource_id", referencedColumnName = "id")
-    private Resource resource;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private List<Building> buildings;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "unit_id", referencedColumnName = "id")
-    private Unit unit;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private List<Resource> resources;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "building_id", referencedColumnName = "id")
-    private Building building;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private List<Unit> units;
 }

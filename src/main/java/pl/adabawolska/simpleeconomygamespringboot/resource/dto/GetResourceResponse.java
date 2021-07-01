@@ -5,16 +5,16 @@ import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
 
 import java.util.function.Function;
 
-@Getter
+/*@Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode*/
 public class GetResourceResponse {
 
-    private Long mudQuantity;
+    /*private Long mudQuantity;
 
     private Long stoneQuantity;
 
@@ -26,5 +26,5 @@ public class GetResourceResponse {
                 .stoneQuantity(resource.getStoneQuantity())
                 .meatQuantity(resource.getMeatQuantity())
                 .build();
-    }
+    }*/
 }

@@ -20,37 +20,48 @@ import java.util.List;
 public class ScheduleConfig {
     BuildingService buildingService;
     ResourceService resourceService;
-    UnitService unitService;
+    //UnitService unitService;
     UnitProperties unitProperties;
     BuildingProperties buildingProperties;
 
     @Autowired
-    public ScheduleConfig(BuildingService buildingService, UnitService unitService,
+    public ScheduleConfig(BuildingService buildingService, /*UnitService unitService,*/
                                    ResourceService resourceService, UnitProperties unitProperties,
                                    BuildingProperties buildingProperties) {
         this.buildingService = buildingService;
-        this.unitService = unitService;
+        //this.unitService = unitService;
         this.resourceService = resourceService;
         this.unitProperties = unitProperties;
         this.buildingProperties = buildingProperties;
     }
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 10000)
     public void scheduleFixedDelayTask() {
-        int scheduleDelayInSeconds = 1000/100;
+        //int scheduleDelayInSeconds = 1000/100;
+        int scheduleDelayInSeconds = 1000/10;
         List<Building> allBuildings = buildingService.findAllBuildings();
         for (Building building: allBuildings) {
             Long userId = building.getUser().getId();
-            Resource resource = resourceService.findResourceByUserId(userId);
-            Unit unit = unitService.findUnitByUserId(userId);
+            List<Resource> resources = resourceService.findResourceByUserId(userId);
+            //Unit unit = unitService.findUnitByUserId(userId);
 
-            Long mud = resource.getMudQuantity();
-            Long stone = resource.getStoneQuantity();
-            Long meat = resource.getMeatQuantity();
+            Resource resourceMud = resources.get(0);
+            Resource resourceStone = resources.get(1);
+            Resource resourceMeat = resources.get(2);
 
-            Long mudProd = building.getMudGatherersCottageQuantity() * buildingProperties.getMudGatherersCottageProd();
-            resource.setMudQuantity(mud + mudProd);
+            Long mud = resourceMud.getAmount();
+            Long stone = resourceStone.getAmount();
+            Long meat = resourceMeat.getAmount();
 
+            if (building.getType().equals("COTTAGE")) {
+                resourceMud.setAmount(mud + buildingProperties.getMudGatherersCottageProd());
+            } else if (building.getType().equals("QUARRY")) {
+                resourceStone.setAmount(stone + buildingProperties.getStoneQuarryProd());
+            }
+            //Long mudProd = building.getMudGatherersCottageQuantity() * buildingProperties.getMudGatherersCottageProd();
+            //resource.setMudQuantity(mud + mudProd);
+
+            /*Long mudProd = building.
             Long stoneProd = building.getStoneQuarryQuantity() * buildingProperties.getStoneQuarryProd();
             resource.setStoneQuantity(stone + stoneProd);
 
@@ -61,13 +72,14 @@ public class ScheduleConfig {
 
             long meatProd = building.getHuntersHutQuantity() * buildingProperties.getHuntersHutProd();
             long meatSum = meat - meatCost + meatProd;
-            meatSum = desertion(unit, meatSum);
-            resource.setMeatQuantity(meatSum);
+            meatSum = desertion(unit, meatSum);*/
+            //resource.setMeatQuantity(meatSum);
 
-            resourceService.saveResource(resource);
+            resourceService.saveResource(resourceMud);
+            resourceService.saveResource(resourceStone);
         }
 
-    }
+    }/*
     private long desertion(Unit unit, Long meatSum) {
         while (meatSum < 0) {
             if (unit.getUglyTrollQuantity() > 0) {
@@ -86,5 +98,5 @@ public class ScheduleConfig {
         }
         unitService.saveUnit(unit);
         return meatSum;
-    }
+    }*/
 }

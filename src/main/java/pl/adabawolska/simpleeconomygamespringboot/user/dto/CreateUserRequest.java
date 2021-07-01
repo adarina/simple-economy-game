@@ -6,6 +6,7 @@ import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
 import pl.adabawolska.simpleeconomygamespringboot.unit.entity.Unit;
 import pl.adabawolska.simpleeconomygamespringboot.user.entity.User;
 
+import java.util.List;
 import java.util.function.Function;
 
 @Getter
@@ -23,14 +24,13 @@ public class CreateUserRequest {
 
     private String password;
 
-    public static Function<CreateUserRequest, User> dtoToEntityMapper(Resource resource, Building building, Unit unit) {
+    private List<Resource> resources;
+
+    public static Function<CreateUserRequest, User> dtoToEntityMapper() {
         return request -> User.builder()
                 .id(request.getId())
                 .username(request.getUsername())
                 .password(request.getPassword())
-                .resource(resource)
-                .building(building)
-                .unit(unit)
                 .build();
     }
 }

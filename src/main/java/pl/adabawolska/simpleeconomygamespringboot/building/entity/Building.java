@@ -1,6 +1,5 @@
 package pl.adabawolska.simpleeconomygamespringboot.building.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import pl.adabawolska.simpleeconomygamespringboot.user.entity.User;
 
@@ -22,25 +21,10 @@ public class Building {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "mud_gatherers_cottage_quantity")
-    private Long mudGatherersCottageQuantity;
+    @Column(name = "type")
+    private String type;
 
-    @Column(name = "stone_quarry_quantity")
-    private Long stoneQuarryQuantity;
-
-    @Column(name = "hunters_hut_quantity")
-    private Long huntersHutQuantity;
-
-    @Column(name = "goblins_caverns_ownership")
-    private boolean goblinsCavernOwnership;
-
-    @Column(name = "orcs_pit_ownership")
-    private boolean orcsPitOwnership;
-
-    @Column(name = "trolls_cave_ownership")
-    private boolean trollsCaveOwnership;
-
-    @OneToOne(mappedBy = "building")
-    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user")
     private User user;
 }

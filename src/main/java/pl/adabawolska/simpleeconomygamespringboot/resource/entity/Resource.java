@@ -23,16 +23,13 @@ public class Resource implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "mud_quantity")
-    private Long mudQuantity;
+    @Column(name = "type")
+    private String type;
 
-    @Column(name = "stone_quantity")
-    private Long stoneQuantity;
+    @Column(name = "amount")
+    private Long amount;
 
-    @Column(name = "meat_quantity")
-    private Long meatQuantity;
-
-    @OneToOne(mappedBy = "resource")
-    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user")
     private User user;
 }
