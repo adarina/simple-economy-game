@@ -1,0 +1,15 @@
+<div *ngIf="user">
+    <form class="login" (ngSubmit)="onLogout()">
+        {{user}}
+        <input type="submit" value="logout" />
+    </form>
+</div>
+<div *ngIf="!user">
+    <form class="login" (ngSubmit)="onLogin()">
+        <label for="login">login</label>
+        <input type="text" [(ngModel)]="login" name="login" />
+        <label for="password">password</label>
+        <input type="text" [(ngModel)]="password" name="password" />
+        <input type="submit" value="login" />
+    </form>
+</div>

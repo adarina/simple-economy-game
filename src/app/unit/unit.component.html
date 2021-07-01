@@ -1,0 +1,15 @@
+<div *ngIf="unit">
+    <p>Id: {{unit.id}}</p>
+    <p>Type: {{unit.type}}</p>
+    <p>Amount: {{unit.amount}}</p>
+    <p>Active: {{unit.active}}</p>
+</div>
+
+<section>
+    <form class="add" (ngSubmit)="editUnit(unit.id, unit.type)">
+        <label for="amount">amount</label>
+        <input type="text" [(ngModel)]="amount" name="amount" />
+        <input type="submit" value="add" />
+    </form>
+</section> 
+
