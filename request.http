@@ -22,7 +22,7 @@ GET http://localhost:8080/api/users/2/buildings
 
 ###
 
-GET http://localhost:8080/api/users/1/units
+GET http://localhost:8080/api/users/1/units/1
 
 ###
 
@@ -40,8 +40,18 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:8080/api/users
+Content-Type: application/json
 
-POST http://localhost:8080/api/users/1/buildings
+{
+  "id": 2,
+  "username": "Ada",
+  "password": "12384"
+}
+
+###
+
+POST http://localhost:8080/api/users/2/buildings
 Content-Type: application/json
 
 {
@@ -101,7 +111,7 @@ Content-Type: application/json
 
 {
   "type": "GOBLIN",
-  "amount": 2900
+  "amount": -100
 }
 
 ###

@@ -14,7 +14,7 @@ public class UnitBuilder {
     public Unit defaultBuildGoblinArcherEntity(User user) {
         Unit unit = new Unit();
         unit.setType("GOBLIN");
-        unit.setAmount(200L);
+        unit.setAmount(5L);
         unit.setActive(false);
         unit.setUser(user);
         return unit;

@@ -3,6 +3,7 @@ package pl.adabawolska.simpleeconomygamespringboot.unit.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.adabawolska.simpleeconomygamespringboot.building.entity.Building;
 import pl.adabawolska.simpleeconomygamespringboot.building.repository.BuildingRepository;
 import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
 import pl.adabawolska.simpleeconomygamespringboot.resource.repository.ResourceRepository;
@@ -134,8 +135,11 @@ public class UnitService {
     public void update(Unit unit) {
         unitRepository.save(unit);
     }
-/*
+    public List<Unit> findAllUnits() {
+        return unitRepository.findAll();
+    }
+
     public Unit saveUnit(Unit unit) {
         return unitRepository.save(unit);
-    }*/
+    }
 }

@@ -6,97 +6,122 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import pl.adabawolska.simpleeconomygamespringboot.building.entity.Building;
 import pl.adabawolska.simpleeconomygamespringboot.building.properties.BuildingProperties;
+import pl.adabawolska.simpleeconomygamespringboot.building.repository.BuildingRepository;
 import pl.adabawolska.simpleeconomygamespringboot.building.service.BuildingService;
 import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
+import pl.adabawolska.simpleeconomygamespringboot.resource.repository.ResourceRepository;
 import pl.adabawolska.simpleeconomygamespringboot.resource.service.ResourceService;
 import pl.adabawolska.simpleeconomygamespringboot.unit.entity.Unit;
 import pl.adabawolska.simpleeconomygamespringboot.unit.properties.UnitProperties;
+import pl.adabawolska.simpleeconomygamespringboot.unit.repository.UnitRepository;
 import pl.adabawolska.simpleeconomygamespringboot.unit.service.UnitService;
+import pl.adabawolska.simpleeconomygamespringboot.user.entity.User;
+import pl.adabawolska.simpleeconomygamespringboot.user.repository.UserRepository;
 
 import java.util.List;
 
 @Configuration
 @EnableScheduling
 public class ScheduleConfig {
-    BuildingService buildingService;
-    ResourceService resourceService;
-    //UnitService unitService;
-    UnitProperties unitProperties;
-    BuildingProperties buildingProperties;
+    private BuildingService buildingService;
+    private final ResourceService resourceService;
+    private UnitService unitService;
+    private final UnitProperties unitProperties;
+    private final BuildingProperties buildingProperties;
+    private final ResourceRepository resourceRepository;
+    private final UserRepository userRepository;
+    private final BuildingRepository buildingRepository;
+    private final UnitRepository unitRepository;
 
     @Autowired
-    public ScheduleConfig(BuildingService buildingService, /*UnitService unitService,*/
-                                   ResourceService resourceService, UnitProperties unitProperties,
-                                   BuildingProperties buildingProperties) {
+    public ScheduleConfig(BuildingService buildingService, UnitService unitService,
+                          ResourceService resourceService, UnitProperties unitProperties,
+                          BuildingProperties buildingProperties, ResourceRepository resourceRepository, UserRepository userRepository, BuildingRepository buildingRepository, UnitRepository unitRepository) {
         this.buildingService = buildingService;
-        //this.unitService = unitService;
+        this.unitService = unitService;
         this.resourceService = resourceService;
         this.unitProperties = unitProperties;
         this.buildingProperties = buildingProperties;
+        this.resourceRepository = resourceRepository;
+        this.userRepository = userRepository;
+        this.buildingRepository = buildingRepository;
+        this.unitRepository = unitRepository;
     }
 
     @Scheduled(fixedDelay = 10000)
     public void scheduleFixedDelayTask() {
-        //int scheduleDelayInSeconds = 1000/100;
-        int scheduleDelayInSeconds = 1000/10;
-        List<Building> allBuildings = buildingService.findAllBuildings();
-        for (Building building: allBuildings) {
-            Long userId = building.getUser().getId();
-            List<Resource> resources = resourceService.findResourceByUserId(userId);
-            //Unit unit = unitService.findUnitByUserId(userId);
 
-            Resource resourceMud = resources.get(0);
-            Resource resourceStone = resources.get(1);
-            Resource resourceMeat = resources.get(2);
+        List<User> users = userRepository.findAll();
+        for (User user: users) {
+            Long userId = user.getId();
+
+            Resource resourceMud = resourceRepository.findByUserIdAndType(userId,"MUD");
+            Resource resourceStone = resourceRepository.findByUserIdAndType(userId,"STONE");
+            Resource resourceMeat = resourceRepository.findByUserIdAndType(userId,"MEAT");
 
             Long mud = resourceMud.getAmount();
             Long stone = resourceStone.getAmount();
             Long meat = resourceMeat.getAmount();
 
-            if (building.getType().equals("COTTAGE")) {
-                resourceMud.setAmount(mud + buildingProperties.getMudGatherersCottageProd());
-            } else if (building.getType().equals("QUARRY")) {
-                resourceStone.setAmount(stone + buildingProperties.getStoneQuarryProd());
+            Long newMud = mud;
+            Long newStone = stone;
+            Long newMeat = meat;
+
+            List<Building> buildings = buildingRepository.findByUserId(userId);
+            for (Building building: buildings) {
+                if (building.getType().equals("COTTAGE")) {
+                    newMud += buildingProperties.getMudGatherersCottageProd();
+                } else if (building.getType().equals("QUARRY")) {
+                    newStone += buildingProperties.getStoneQuarryProd();
+                } else if (building.getType().equals("HUT")) {
+                    newMeat += buildingProperties.getHuntersHutProd();
+                }
             }
-            //Long mudProd = building.getMudGatherersCottageQuantity() * buildingProperties.getMudGatherersCottageProd();
-            //resource.setMudQuantity(mud + mudProd);
 
-            /*Long mudProd = building.
-            Long stoneProd = building.getStoneQuarryQuantity() * buildingProperties.getStoneQuarryProd();
-            resource.setStoneQuantity(stone + stoneProd);
-
-            Long meatCost = (unit.getGoblinArcherQuantity() * unitProperties.getGoblinArcherMeatCost()
-                    + unit.getOrcWarriorQuantity() * unitProperties.getOrcWarriorMeatCost()
-                    + unit.getUglyTrollQuantity() * unitProperties.getGoblinArcherMeatCost())
-                    * scheduleDelayInSeconds;
-
-            long meatProd = building.getHuntersHutQuantity() * buildingProperties.getHuntersHutProd();
-            long meatSum = meat - meatCost + meatProd;
-            meatSum = desertion(unit, meatSum);*/
-            //resource.setMeatQuantity(meatSum);
+            resourceMud.setAmount(newMud);
+            resourceStone.setAmount(newStone);
+            resourceMeat.setAmount(newMeat);
 
             resourceService.saveResource(resourceMud);
             resourceService.saveResource(resourceStone);
-        }
+            resourceService.saveResource(resourceMeat);
 
-    }/*
-    private long desertion(Unit unit, Long meatSum) {
+            meat = resourceMeat.getAmount();
+
+            List<Unit> units = unitRepository.findByUserId(userId);
+            for (Unit unit: units) {
+                if (unit.getType().equals("GOBLIN") && unit.getActive()) {
+                    resourceMeat.setAmount(meat - (unitProperties.getGoblinArcherMeatCost() * unit.getAmount()));
+                } else if (unit.getType().equals("ORC") && unit.getActive()) {
+                    resourceMeat.setAmount(meat - (unitProperties.getOrcWarriorMeatCost() * unit.getAmount()));
+                } else if (unit.getType().equals("TROLL") && unit.getActive()) {
+                    resourceMeat.setAmount(meat - (unitProperties.getUglyTrollMeatCost() * unit.getAmount()));
+                }
+            }
+            if (resourceMeat.getAmount() < 0) {
+                Long newMeatSum = desertion(units, resourceMeat.getAmount());
+                resourceMeat.setAmount(newMeatSum);
+            }
+            resourceService.saveResource(resourceMeat);
+        }
+    }
+
+    private long desertion(List<Unit> units, Long meatSum) {
         while (meatSum < 0) {
-            if (unit.getUglyTrollQuantity() > 0) {
-                unit.setUglyTrollQuantity(unit.getUglyTrollQuantity() - 1);
-                meatSum += unitProperties.getUglyTrollMeatCost();
-                continue;
+            for (Unit unit : units) {
+                if (unit.getType().equals("GOBLIN") && unit.getActive() && unit.getAmount() > 0) {
+                    unit.setAmount(unit.getAmount() - 1);
+                    meatSum += unitProperties.getGoblinArcherMeatCost();
+                } else if (unit.getType().equals("ORC") && unit.getActive() && unit.getAmount() > 0) {
+                    unit.setAmount(unit.getAmount() - 1);
+                    meatSum += unitProperties.getOrcWarriorMeatCost();
+                } else if (unit.getType().equals("TROLL") && unit.getActive() && unit.getAmount() > 0) {
+                    unit.setAmount(unit.getAmount() - 1);
+                    meatSum += unitProperties.getUglyTrollMeatCost();
+                }
+                unitService.saveUnit(unit);
             }
-            if (unit.getOrcWarriorQuantity() > 0) {
-                unit.setOrcWarriorQuantity(unit.getOrcWarriorQuantity() - 1);
-                meatSum += unitProperties.getOrcWarriorMeatCost();
-                continue;
-            }
-
-            unit.setGoblinArcherQuantity(unit.getGoblinArcherQuantity() - 1);
-            meatSum += unitProperties.getGoblinArcherMeatCost();
         }
-        unitService.saveUnit(unit);
         return meatSum;
-    }*/
+    }
 }

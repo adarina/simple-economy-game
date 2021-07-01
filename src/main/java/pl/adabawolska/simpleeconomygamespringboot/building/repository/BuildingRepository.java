@@ -13,6 +13,8 @@ public interface BuildingRepository extends JpaRepository<Building, Long> {
 
     Building findByUserIdAndType(Long id, String type);
 
+    List<Building> findByUserId(Long id);
+
     Optional<Building> findByIdAndUser(Long id, User user);
 
     List<Building> findAllByUser(User user);

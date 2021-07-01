@@ -30,7 +30,7 @@ public class ResourceBuilder {
     public Resource defaultBuildMeatEntity(User user) {
         Resource resource = new Resource();
         resource.setType("MEAT");
-        resource.setAmount(1000000L);
+        resource.setAmount(10L);
         resource.setUser(user);
         return resource;
     }
