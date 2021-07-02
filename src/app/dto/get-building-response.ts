@@ -1,6 +1,6 @@
-import { BuildingDTO } from './building-dto';
+import { Building } from '../model/building';
 
 export class GetBuildingResponse {
 
-    buildings: Array<BuildingDTO>;
+    buildings: Array<Building>;
 }

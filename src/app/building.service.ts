@@ -14,9 +14,10 @@ export class BuildingService {
   constructor(private _http: HttpClient) { }
 
   getBuildings(name: string): Observable<Array<Building>> {
+    let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
     headers = headers.set('Data-Type', 'json');
-    return this._http.get<GetBuildingResponse>('http://localhost:8080/api/users/1/buildings', {headers}).
+    return this._http.get<GetBuildingResponse>('http://localhost:8080/api/users/'+ user.id +'/buildings', {headers}).
         pipe(map(value => {
           let buildings = new Array<Building>();
           value.buildings.forEach(building => {
@@ -27,10 +28,11 @@ export class BuildingService {
   }
 
   addBuilding(type: string) {
+    let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
     headers = headers.set('Data-Type', 'json');
     let building: Building = new Building(null, type);
     console.log(building)
-    return this._http.post('http://localhost:8080/api/users/1/buildings', building, {headers});
+    return this._http.post('http://localhost:8080/api/users/'+ user.id +'/buildings', building, {headers});
   }
 }

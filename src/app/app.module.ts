@@ -17,6 +17,9 @@ import { BuildingComponent } from './building/building.component';
 import { ResourceComponent } from './resource/resource.component';
 import { UnitComponent } from './unit/unit.component';
 import { UnitsComponent } from './units/units.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { RegisterManagementComponent } from './register-management/register-management.component';
+//import { RegisterManagementComponent } from './register-management/register-management.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,9 @@ import { UnitsComponent } from './units/units.component';
     BuildingComponent,
     ResourceComponent,
     UnitComponent,
-    UnitsComponent
+    UnitsComponent,
+    NavigationComponent,
+    RegisterManagementComponent
   ],
   imports: [
     BrowserModule,

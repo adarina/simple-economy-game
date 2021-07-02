@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ResourceDTO } from '../dto/resource-dto';
-import { UserDTO } from '../dto/user-dto';
-import { ResourceService } from '../resource.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoginService } from '../login.service';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-login',
@@ -10,16 +10,18 @@ import { ResourceService } from '../resource.service';
 })
 export class LoginComponent implements OnInit {
 
-  users: UserDTO[] = [];
+  private _users: Array<User>;
 
   public _login: string;
 
   public _password: string;
 
-  constructor() { }
+  public _id: number;
+
+  constructor(private _loginService: LoginService, private _route: ActivatedRoute, private _router: Router) { }
 
   ngOnInit(): void {
-    
+    this.getUsers();
   }
 
   get user(): string {
@@ -49,14 +51,39 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
-    let user = {
-      auth: btoa(this._login + ":" + this._password),
-      login: this._login
+    this.checkUser();
+    this._router.navigateByUrl('/buildings');
+  }
+
+  getUsers(): void {
+    if (this._route.snapshot.paramMap) {
+      this._loginService.getUsers(this._route.snapshot.paramMap.get('users')).subscribe(value => { 
+        this._users = value;
+      },
+      error => {
+        console.log(error);
+        console.log(error.status);
+        console.log(error.error);
+      });
     }
-    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  checkUser(): void {
+    console.log(this._users)
+    this._users.forEach(current => {
+     if(current.username === this._login) {
+        let user = {
+          auth: btoa(current.id + ":" + this._password),
+          id: current.id,
+          login: current.username
+        }
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+    })
   }
 
   onLogout(): void {
     localStorage.removeItem('user');
+    this._router.navigateByUrl('/');
   }
 }

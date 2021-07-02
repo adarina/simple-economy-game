@@ -1,11 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BuildingService } from '../building.service';
-import { BuildingDTO } from '../dto/building-dto';
-import { ResourceDTO } from '../dto/resource-dto';
 import { Building } from '../model/building';
-//import { Building } from '../model/building';
-import { ResourceService } from '../resource.service';
 
 @Component({
   selector: 'app-buildings',

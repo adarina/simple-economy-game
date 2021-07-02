@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GetUnitResponse } from './dto/get-unit-response';
-import { UnitDTO } from './dto/unit-dto';
 import { Unit } from './model/unit';
 
 @Injectable({
@@ -14,9 +13,10 @@ export class UnitService {
   constructor(private _http: HttpClient) { }
 
   getUnits(name: string): Observable<Array<Unit>> {
+    let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
     headers = headers.set('Data-Type', 'json');
-    return this._http.get<GetUnitResponse>('http://localhost:8080/api/users/1/units', {headers}).
+    return this._http.get<GetUnitResponse>('http://localhost:8080/api/users/'+ user.id +'/units', {headers}).
         pipe(map(value => {
           let units = new Array<Unit>();
           value.units.forEach(unit => {
@@ -27,16 +27,18 @@ export class UnitService {
   }
 
   getUnit(id: number): Observable<Unit> {
+    let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
     headers = headers.set('Data-Type', 'json');
-    return this._http.get<Unit>('http://localhost:8080/api/users/1/units/'+ id, {headers})
+    return this._http.get<Unit>('http://localhost:8080/api/users/'+ user.id +'/units/'+ id, {headers})
   }
 
   addUnit(type: string, amount: number) {
+    let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
     let unit: Unit = new Unit(null, type, amount, null);
     console.log(unit);
-    return this._http.put('http://localhost:8080/api/users/1/units/1/', unit, {headers});
+    return this._http.put('http://localhost:8080/api/users/'+ user.id +'/units/1/', unit, {headers});
   }
 }

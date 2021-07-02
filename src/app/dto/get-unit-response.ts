@@ -1,6 +1,6 @@
-import { UnitDTO } from "./unit-dto";
+import { Unit } from "../model/unit";
 
 export class GetUnitResponse {
     
-    units: Array<UnitDTO>;
+    units: Array<Unit>;
 }

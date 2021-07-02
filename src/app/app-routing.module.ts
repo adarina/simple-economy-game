@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BuildingsComponent } from './buildings/buildings.component';
-import { RegisterComponent } from './register/register.component';
+import { BuildingsManagementComponent } from './buildings-management/buildings-management.component';
+import { RegisterManagementComponent } from './register-management/register-management.component';
+import { UnitsManagementComponent } from './units-management/units-management.component';
 
 
 const routes: Routes = [
-  {path: '', component: RegisterComponent},
-  {path: 'buildings', component: BuildingsComponent}
+  {path: '', component: RegisterManagementComponent},
+  {path: 'buildings', component: BuildingsManagementComponent},
+  {path: 'units', component: UnitsManagementComponent}
 ];
 
 @NgModule({

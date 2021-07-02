@@ -1,5 +1,5 @@
-import { ResourceDTO } from "./resource-dto";
+import { Resource } from "../model/resource";
 
 export class GetResourceResponse {
-    resources: Array<ResourceDTO>;
+    resources: Array<Resource>;
 }

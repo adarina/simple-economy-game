@@ -12,12 +12,20 @@ import { Resource } from './model/resource';
 })
 export class ResourceService {
 
+  get authoriztion() {
+    let user = localStorage.getItem('user');
+    let parsed = JSON.parse(user);
+    return parsed.auth;
+  }
+
   constructor(private _http: HttpClient) { }
 
   getResources(name: string): Observable<Array<Resource>> {
+    let user = JSON.parse(localStorage.getItem('user'));
+    if(user !== null) {
     let headers = new HttpHeaders();
     headers = headers.set('Data-Type', 'json');
-    return this._http.get<GetResourceResponse>('http://localhost:8080/api/users/1/resources', {headers}).
+    return this._http.get<GetResourceResponse>('http://localhost:8080/api/users/'+ user.id +'/resources', {headers}).
         pipe(map(value => {
           let resources = new Array<Resource>();
           value.resources.forEach(resource => {
@@ -25,5 +33,6 @@ export class ResourceService {
           })
           return resources;
         }))
+  } return null;
   }
 }
