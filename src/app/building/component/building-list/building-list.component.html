@@ -1,0 +1,16 @@
+
+    <div>
+        <app-building-single *ngFor="let building of buildings" [building]="building"></app-building-single>
+    </div>
+
+
+    <button (click)="addBuilding('COTTAGE')">Mud Gatherer's Cottage</button>
+    <button (click)="addBuilding('QUARRY')">Stone Quarry</button>
+    <button (click)="addBuilding('HUT')">Hunter's Hut</button>
+    <button (click)="addBuilding('CAVERN')">Goblin's Cavern</button>
+    <button (click)="addBuilding('PIT')">Orc's Pit</button>
+    <button (click)="addBuilding('CAVE')">Troll's Cave</button>
+
+
+
+

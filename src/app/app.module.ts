@@ -5,20 +5,23 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { RegisterComponent } from './register/register.component';
-import { FooterComponent } from './footer/footer.component';
-import { HeaderComponent } from './header/header.component';
-import { LoginComponent } from './login/login.component';
-import { BuildingsComponent } from './buildings/buildings.component';
-import { ResourcesComponent } from './resources/resources.component';
-import { BuildingsManagementComponent } from './buildings-management/buildings-management.component';
-import { UnitsManagementComponent } from './units-management/units-management.component';
-import { BuildingComponent } from './building/building.component';
-import { ResourceComponent } from './resource/resource.component';
-import { UnitComponent } from './unit/unit.component';
-import { UnitsComponent } from './units/units.component';
-import { NavigationComponent } from './navigation/navigation.component';
-import { RegisterManagementComponent } from './register-management/register-management.component';
+import { RegisterComponent } from './user/component/register/register.component';
+import { FooterComponent } from './template/footer/footer.component';
+import { HeaderComponent } from './template/header/header.component';
+import { LoginComponent } from './template/login/login.component';
+//import { BuildingsListComponent } from './building/buildings-list/buildings-list.component';
+import { ResourcesComponent } from './resource/component/resources/resources.component';
+//import { BuildingsManagementComponent } from './building/buildings-management/buildings-management.component';
+import { UnitsManagementComponent } from './unit/component/units-management/units-management.component';
+import { BuildingSingleComponent } from './building/component/building-single/building-single.component';
+import { ResourceComponent } from './resource/component/resource/resource.component';
+import { UnitComponent } from './unit/component/unit/unit.component';
+import { UnitsComponent } from './unit/component/units/units.component';
+import { NavigationComponent } from './template/navigation/navigation.component';
+import { RegisterManagementComponent } from './user/component/register-management/register-management.component';
+//import { BuildingsListComponent } from './building/component/building-list/building-list.component';
+import { BuildingManagementComponent } from './building/component/building-management/building-management.component';
+import { BuildingListComponent } from './building/component/building-list/building-list.component';
 //import { RegisterManagementComponent } from './register-management/register-management.component';
 
 @NgModule({
@@ -28,11 +31,11 @@ import { RegisterManagementComponent } from './register-management/register-mana
     FooterComponent,
     HeaderComponent,
     LoginComponent,
-    BuildingsComponent,
+    BuildingListComponent,
     ResourcesComponent,
-    BuildingsManagementComponent,
+    BuildingManagementComponent,
     UnitsManagementComponent,
-    BuildingComponent,
+    BuildingSingleComponent,
     ResourceComponent,
     UnitComponent,
     UnitsComponent,
