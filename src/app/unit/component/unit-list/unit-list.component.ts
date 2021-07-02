@@ -1,26 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { timer } from 'rxjs';
 import { Unit } from '../../model/unit';
 import { UnitService } from '../../service/unit.service';
-//import { Unit } from '../../../model/unit';
-//import { UnitService } from '../../../unit.service';
 
 @Component({
-  selector: 'app-units',
-  templateUrl: './units.component.html',
-  styleUrls: ['./units.component.css']
+  selector: 'app-unit-list',
+  templateUrl: './unit-list.component.html',
+  styleUrls: ['./unit-list.component.css']
 })
-export class UnitsComponent implements OnInit {
+export class UnitListComponent implements OnInit {
 
   private _units: Array<Unit>;
 
   constructor(private _unitService: UnitService, private _route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    //timer(100, 100).subscribe(timer => {
       this.getUnits();
-    //});
   }
 
   getUnits(): void {
@@ -44,16 +39,4 @@ export class UnitsComponent implements OnInit {
   set units(units: Array<Unit>) {
     this._units = units;
   }
-
-
-  /*addBuilding(type: string): void {
-    this._buildingService.addBuilding(type).subscribe(data => {
-      this.ngOnInit();
-    },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      });
-  }*/
 }

@@ -3,16 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs';
 import { Resource } from '../../model/resource';
 import { ResourceService } from '../../service/resource.service';
-//import { Resource } from '../../../model/resource';
-//import { ResourceService } from '../../../resource.service';
 
 @Component({
-  selector: 'app-resources',
-  templateUrl: './resources.component.html',
-  styleUrls: ['./resources.component.css']
+  selector: 'app-resource-list',
+  templateUrl: './resource-list.component.html',
+  styleUrls: ['./resource-list.component.css']
 })
 
-export class ResourcesComponent implements OnInit {
+export class ResourceListComponent implements OnInit {
 
   private _resources: Array<Resource>;
 

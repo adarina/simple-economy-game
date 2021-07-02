@@ -2,18 +2,15 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Unit } from '../../model/unit';
 import { UnitService } from '../../service/unit.service';
-//import { Unit } from '../../../model/unit';
-//import { UnitService } from '../../../unit.service';
-//import { UnitsComponent } from '../units/units.component';
 
 @Component({
-  selector: 'app-unit',
-  templateUrl: './unit.component.html',
-  styleUrls: ['./unit.component.css']
+  selector: 'app-unit-single',
+  templateUrl: './unit-single.component.html',
+  styleUrls: ['./unit-single.component.css']
 })
 
 
-export class UnitComponent implements OnInit {
+export class UnitSingleComponent implements OnInit {
 
   private _unit: Unit;
 
@@ -27,7 +24,7 @@ export class UnitComponent implements OnInit {
 
   private _units: Array<Unit>;
 
-  constructor(private _unitService: UnitService/*, private _unitsComponent: UnitsComponent*/,private _route: ActivatedRoute) { }
+  constructor(private _unitService: UnitService, private _route: ActivatedRoute) { }
 
   set amount(amount: number) {
     this._amount = amount;

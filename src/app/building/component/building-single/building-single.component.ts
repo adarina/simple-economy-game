@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Building } from '../../model/building';
-//import { Building } from '../model/building';
 
 @Component({
   selector: 'app-building-single',

@@ -1,13 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Resource } from '../../model/resource';
-//import { Resource } from '../../../model/resource';
 
 @Component({
-  selector: 'app-resource',
-  templateUrl: './resource.component.html',
-  styleUrls: ['./resource.component.css']
+  selector: 'app-resource-single',
+  templateUrl: './resource-single.component.html',
+  styleUrls: ['./resource-single.component.css']
 })
-export class ResourceComponent implements OnInit {
+export class ResourceSingleComponent implements OnInit {
 
   private _resource: Resource;
 

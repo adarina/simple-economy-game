@@ -2,10 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Building } from '../../model/building';
 import { BuildingService } from '../../service/building.service';
-//import { BuildingService } from '../../building.service';
-//import { Building } from '../model/building';
-//import { BuildingService } from '../service/building.service';
-//import { Building } from '../model/building';
 
 @Component({
   selector: 'app-building-list',

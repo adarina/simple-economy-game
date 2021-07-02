@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from 'src/app/user/service/user.service';
 import { User } from '../../user/model/user';
-import { LoginService } from '../../user/service/login.service';
-//import { LoginService } from '../login.service';
-//import { User } from '../model/user';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   public _id: number;
 
-  constructor(private _loginService: LoginService, private _route: ActivatedRoute, private _router: Router) { }
+  constructor(private _userService: UserService, private _route: ActivatedRoute, private _router: Router) { }
 
   ngOnInit(): void {
     this.getUsers();
@@ -59,7 +57,7 @@ export class LoginComponent implements OnInit {
 
   getUsers(): void {
     if (this._route.snapshot.paramMap) {
-      this._loginService.getUsers(this._route.snapshot.paramMap.get('users')).subscribe(value => { 
+      this._userService.getUsers(this._route.snapshot.paramMap.get('users')).subscribe(value => { 
         this._users = value;
       },
       error => {

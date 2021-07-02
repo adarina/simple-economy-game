@@ -4,13 +4,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../model/user';
 import { GetUserResponse } from '../dto/get-user-response';
-//import { GetUserResponse } from './dto/get-user-response';
-//import { User } from './model/user';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class UserService {
 
   constructor(private _http: HttpClient) { }
   

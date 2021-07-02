@@ -4,10 +4,6 @@ import { Observable, timer } from 'rxjs';
 import { debounce, map } from 'rxjs/operators';
 import { GetResourceResponse } from '../dto/get-resource-response';
 import { Resource } from '../model/resource';
-//import { GetResourceResponse } from './dto/get-resource-response';
-//import { ResourceDTO } from './dto/resource-dto';
-//import { Resource } from './model/resource';
-
 
 @Injectable({
   providedIn: 'root'

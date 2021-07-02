@@ -9,20 +9,16 @@ import { RegisterComponent } from './user/component/register/register.component'
 import { FooterComponent } from './template/footer/footer.component';
 import { HeaderComponent } from './template/header/header.component';
 import { LoginComponent } from './template/login/login.component';
-//import { BuildingsListComponent } from './building/buildings-list/buildings-list.component';
-import { ResourcesComponent } from './resource/component/resources/resources.component';
-//import { BuildingsManagementComponent } from './building/buildings-management/buildings-management.component';
-import { UnitsManagementComponent } from './unit/component/units-management/units-management.component';
+import { ResourceListComponent } from './resource/component/resource-list/resource-list.component';
 import { BuildingSingleComponent } from './building/component/building-single/building-single.component';
-import { ResourceComponent } from './resource/component/resource/resource.component';
-import { UnitComponent } from './unit/component/unit/unit.component';
-import { UnitsComponent } from './unit/component/units/units.component';
+import { ResourceSingleComponent } from './resource/component/resource-single/resource-single.component';
 import { NavigationComponent } from './template/navigation/navigation.component';
 import { RegisterManagementComponent } from './user/component/register-management/register-management.component';
-//import { BuildingsListComponent } from './building/component/building-list/building-list.component';
-import { BuildingManagementComponent } from './building/component/building-management/building-management.component';
 import { BuildingListComponent } from './building/component/building-list/building-list.component';
-//import { RegisterManagementComponent } from './register-management/register-management.component';
+import { BuildingManagementComponent } from './building/component/building-management/building-management.component';
+import { UnitSingleComponent } from './unit/component/unit-single/unit-single.component';
+import { UnitListComponent } from './unit/component/unit-list/unit-list.component';
+import { UnitManagementComponent } from './unit/component/unit-management/unit-management.component';
 
 @NgModule({
   declarations: [
@@ -32,15 +28,15 @@ import { BuildingListComponent } from './building/component/building-list/buildi
     HeaderComponent,
     LoginComponent,
     BuildingListComponent,
-    ResourcesComponent,
-    BuildingManagementComponent,
-    UnitsManagementComponent,
+    ResourceListComponent,
+    UnitManagementComponent,
     BuildingSingleComponent,
-    ResourceComponent,
-    UnitComponent,
-    UnitsComponent,
+    ResourceSingleComponent,
+    UnitSingleComponent,
+    UnitListComponent,
     NavigationComponent,
-    RegisterManagementComponent
+    RegisterManagementComponent,
+    BuildingManagementComponent
   ],
   imports: [
     BrowserModule,

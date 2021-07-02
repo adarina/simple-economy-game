@@ -1,14 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, pipe } from 'rxjs';
-//import { GetBuildingResponse } from './dto/get-building-response';
-//import { Building } from './model/building';
 import { map } from 'rxjs/operators';
 import { GetBuildingResponse } from '../dto/get-building-response';
 import { Building } from '../model/building';
-//import { GetBuildingResponse } from './buildings/dto/get-building-response';
-//import { Building } from './buildings/model/building';
-
 
 @Injectable({
   providedIn: 'root'

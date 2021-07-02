@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GetUnitResponse } from '../dto/get-unit-response';
 import { Unit } from '../model/unit';
-//import { GetUnitResponse } from './dto/get-unit-response';
-//import { Unit } from './model/unit';
 
 @Injectable({
   providedIn: 'root'
