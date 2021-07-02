@@ -17,6 +17,7 @@ export class ResourceListComponent implements OnInit {
   constructor(private _resourceService: ResourceService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.getResources();
     timer(1000, 1000).subscribe(timer => {
       this.getResources();
     });

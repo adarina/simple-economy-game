@@ -34,4 +34,11 @@ export class BuildingService {
     console.log(building)
     return this._http.post('http://localhost:8080/api/users/'+ user.id +'/buildings', building, {headers});
   }
+
+  getBuilding(id: number): Observable<Building> {
+    let user = JSON.parse(localStorage.getItem('user'));
+    let headers = new HttpHeaders();
+    headers = headers.set('Data-Type', 'json');
+    return this._http.get<Building>('http://localhost:8080/api/users/'+ user.id +'/buildings/'+ id, {headers})
+  }
 }

@@ -1,0 +1,8 @@
+.unit-title, .unit-list { 
+    display: grid;
+}
+
+.unit-list { 
+    grid-gap: 150px;
+    grid-template-columns: 110px 110px 110px; 
+}

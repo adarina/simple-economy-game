@@ -1,0 +1,4 @@
+.building-single { 
+    display: grid;
+    row-gap: 5px;   
+}

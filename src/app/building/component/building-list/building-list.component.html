@@ -1,15 +1,16 @@
-
-    <div>
-        <app-building-single *ngFor="let building of buildings" [building]="building"></app-building-single>
-    </div>
-
-
-    <button (click)="addBuilding('COTTAGE')">Mud Gatherer's Cottage</button>
-    <button (click)="addBuilding('QUARRY')">Stone Quarry</button>
-    <button (click)="addBuilding('HUT')">Hunter's Hut</button>
-    <button (click)="addBuilding('CAVERN')">Goblin's Cavern</button>
-    <button (click)="addBuilding('PIT')">Orc's Pit</button>
-    <button (click)="addBuilding('CAVE')">Troll's Cave</button>
+<div class="building-title"><h3>Building Shop</h3></div>
+<div class="building-shop">
+    <button *ngIf="checkMudGatherersCottage()" (click)="addBuilding('COTTAGE')">Mud Gatherer's Cottage</button>
+    <button *ngIf="checkStoneQuarry()" (click)="addBuilding('QUARRY')">Stone Quarry</button>
+    <button *ngIf="checkHuntersHut()" (click)="addBuilding('HUT')">Hunter's Hut</button>
+    <button *ngIf="checkGoblinsCavern()" (click)="addBuilding('CAVERN')">Goblin's Cavern</button>
+    <button *ngIf="checkOrcsPit()" (click)="addBuilding('PIT')">Orc's Pit</button>
+    <button *ngIf="checkTrollsCave()" (click)="addBuilding('CAVE')">Troll's Cave</button>
+</div>
+<div class="building-title"><h3>Building List</h3></div>
+<div class="building-list">
+    <app-building-single *ngFor="let building of buildings" [building]="building"></app-building-single>
+</div>
 
 
 

@@ -1,0 +1,13 @@
+.building-title, .building-list, .building-shop { 
+    display: grid;
+}
+
+.building-list { 
+    grid-gap: 50px;
+    grid-template-columns: 100px 100px 100px 100px 100px; 
+}
+
+.building-shop { 
+    grid-gap: 10px;
+    grid-template-columns: 170px 170px 170px 170px; 
+}

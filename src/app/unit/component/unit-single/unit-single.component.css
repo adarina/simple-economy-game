@@ -1,0 +1,12 @@
+.unit-single, .unit-form, .unit-button { 
+    display: grid;
+    row-gap: 5px;   
+}
+
+.unit-form { 
+    grid-template-columns: 200px; 
+}
+
+.unit-button { 
+    grid-template-columns: 100px 100px;  
+}

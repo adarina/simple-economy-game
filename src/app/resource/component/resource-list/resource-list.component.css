@@ -1,0 +1,8 @@
+.resource-title, .resource-list { 
+    display: grid;
+}
+
+.resource-list { 
+    grid-gap: 150px;
+    grid-template-columns: 110px 110px 110px; 
+}

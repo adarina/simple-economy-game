@@ -22,6 +22,8 @@ export class UnitSingleComponent implements OnInit {
 
   active: boolean;
 
+  _value: string;
+
   private _units: Array<Unit>;
 
   constructor(private _unitService: UnitService, private _route: ActivatedRoute) { }
@@ -33,7 +35,6 @@ export class UnitSingleComponent implements OnInit {
   get amount(): number {
     return this._amount;
   }
-
 
   ngOnInit(): void {
   }
@@ -50,7 +51,9 @@ export class UnitSingleComponent implements OnInit {
   }
 
   editUnit(id: number, type: string): void {
-    console.log(this._amount);
+    if(this._value == 'release') {
+      this._amount = -this._amount;
+    }
     this._unitService.addUnit(type, this._amount).subscribe(data => {
       this.getUnit(id);
     },
@@ -59,6 +62,10 @@ export class UnitSingleComponent implements OnInit {
         console.log(error.status);
         console.log(error.error);
       });
+  }
+
+  onItemSelector(value :string) {
+    this._value = value;
   }
 
   @Input()

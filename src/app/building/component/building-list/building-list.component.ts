@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { timer } from 'rxjs';
+import { Resource } from 'src/app/resource/model/resource';
+import { ResourceService } from 'src/app/resource/service/resource.service';
 import { Building } from '../../model/building';
 import { BuildingService } from '../../service/building.service';
 
@@ -13,11 +16,45 @@ export class BuildingListComponent implements OnInit {
 
   private _buildings: Array<Building>;
 
-  constructor(private _buildingService: BuildingService, private _route: ActivatedRoute) { }
+  private _resources: Array<Resource>;
+
+  private _building: Building;
+
+  constructor(private _buildingService: BuildingService, private _route: ActivatedRoute, private _resourceService: ResourceService) { }
 
   ngOnInit(): void {
+    this.getBuildings();
+    this.getResources();
+    timer(1000, 1000).subscribe(timer => {
+      this.getBuildings();
+    this.getResources();
+    });
+
+  }
+
+  getBuildings(): void {
     if (this._route.snapshot.paramMap) {
-      this._buildingService.getBuildings(this._route.snapshot.paramMap.get('buildings')).subscribe(value => this._buildings = value);
+        this._buildingService.getBuildings(this._route.snapshot.paramMap.get('buildings')).subscribe(value => {
+          this._buildings = value;
+      },
+      error => {
+        console.log(error);
+        console.log(error.status);
+        console.log(error.error);
+      })
+    }
+  }
+
+  getResources(): void {
+    if (this._route.snapshot.paramMap) {
+      this._resourceService.getResources(this._route.snapshot.paramMap.get('resources')).subscribe(value => { 
+        this._resources = value;
+      },
+      error => {
+        console.log(error);
+        console.log(error.status);
+        console.log(error.error);
+      });
     }
   }
 
@@ -40,150 +77,161 @@ export class BuildingListComponent implements OnInit {
         console.log(error.error);
       });
   }
-  /*private _team1: Array<Building>;
-  
- 
-  
-  constructor (private _buildingService: BuildingService, private _route: ActivatedRoute) {}
 
-  /**
-   * Loads two teams on startup based on pathg params team1 and team2.
-   */
-  
-
- 
-
-  
-  //buildings: BuildingDTO;
-
-  //resources: ResourceDTO;
-
-  //buildingsArray: Building[] = [];
-
-  /*private _type: string;
-    
-  private _stoneQuarryQuantity: number;
-
-  private _huntersHutQuantity: number;
-
-  private _goblinsCavernOwnership: boolean;
-    
-  private _orcsPitOwnership: boolean;
-
-  private _trollsCaveOwnership: boolean;
-  
-  constructor(private _buildingService: BuildingService, private _resourceService: ResourceService) { }
-
-  set type(type: string) {
-    this._type = type;
-  }
-
-  get type(): string {
-    return this._type;
-  }
-  ngOnInit(): void {
-    this.
-    
-    //this.buildingsArray = this._buildingService.buildingsArray;
-    //console.log(this.buildingsArray)
-  }*/
-
-  /*fetchBuildings() {
-    this._buildingService.fetchBuildings().subscribe(data => { 
-      this.buildings = data;
-      //this.buildings = this.buildings.json().buildings;
-      //this.buildings = data.json()['buildings'];
-      //Array.of(this.buildings);
-      //console.log(Array.of(this.buildings[0]))
-      //onsole.log(this.buildings.)
-      /*for (var val in this.buildings) {
-        console.log(this.buildings[0].type); // prints values: 10, 20, 30, 40
-      }*/
-      //for (var i = 0; i < this.buildings.id; i++) {
-        //console.log( results.genres[i].name );
-    //}//console.log(JSON.stringify(this.buildings))
-      //this.ngOnInit();
-      //this.addBuildings();
-      //let json = this.buildings;
-      //const obj = JSON.parse(json);
-
-//console.log(obj.count);
-// expected output: 42
-
-////console.log(obj.result);
-      //let obj: { string: BuildingDTO[] } = JSON.parse(this.buildings.toString());
-      //console.log(obj.string[0].id, obj.string[0].type);
-      //let json = JSON.stringify(this.buildings);  
-
-      //console.log(json);  
-    /*},
+  getBuilding(id: number) : void {
+    this._buildingService.getBuilding(id).subscribe(data => { 
+      this._building = data;
+    },
     error => {
       console.log(error); 
       console.log(error.status); 
       console.log(error.error);
     });
-  }*/
-
-  /*updateBuildings(buildingName: string): void {
-    this._buildingService.updateBuildings(this.buildings, buildingName)
-      .subscribe(data => {
-        this.fetchBuildings();
-        //this.addBuildings(buildingName);
-    },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      }); 
-  }*/
+  }
 
   checkMudGatherersCottage(): boolean {
-    let lol = true;
-    /*this._resourceService.fetchResources().subscribe(data => { 
-      this.resources = data;
-    },
-    error => {
-      console.log(error); 
-      console.log(error.status); 
-      console.log(error.error);
-    });
-    if (this.resources.mudQuantity >= 100) {
-      lol = true;
-    }*/
-    return lol;
+    let check = true;
+    if(this._buildings == undefined) {
+      check = false;
+    } else if (this._resources == undefined) {
+      check = false;
+    } else {
+      this._resources.forEach(current => { 
+        if(current.type === "MUD" && current.amount <= 100) {
+          check = false;
+        }
+      }
+    )};
+    return check;
   }
 
   checkStoneQuarry(): boolean {
-    return true;
+    let check = true;
+    if(this._buildings == undefined) {
+      check = false;
+    } else if (this._resources == undefined) {
+      check = false;
+    } else {
+      this._resources.forEach(current => { 
+        if(current.type === "MUD" && current.amount <= 1000) {
+          check = false;
+        }
+      }
+    )};
+    return check;
   }
 
-  /*addBuildings(buildingName: string) {
-    
-    if (buildingName == 'mudGatherersCottage') {
-      this.buildingsArray.push(new Building(1,'Mud Gatherer\'s Cottage'))    
-    } else if (buildingName == 'stoneQuarry') {
-      this.buildingsArray.push(new Building(2,'Stone Quarry'))
-    } else if (buildingName == 'huntersHut') {
-      this.buildingsArray.push(new Building(3,'Hunter\'s Hut'))
-    } else if (buildingName == 'goblinsCavern') {
-      this.buildingsArray.push(new Building(4,'Goblin\'s Cavern'))
-    } else if (buildingName == 'orcsPit') {
-      this.buildingsArray.push(new Building(5,'Orc\'s Pit'))
-    } else if (buildingName == 'trollsCave') {
-      this.buildingsArray.push(new Building(6,'Troll\'s Cave'))
+  checkHuntersHut(): boolean {
+    let check = true;
+    let firstTmp = false
+    let secondTmp = false
+    if(this._buildings == undefined) {
+      check = false;
+    } else if (this._resources == undefined) {
+      check = false;
+    } else {
+      this._resources.forEach(current => { 
+        if(current.type === "MUD" && current.amount >= 2000) {
+          firstTmp = true;
+        } else if (current.type === "STONE" && current.amount >= 1000) {
+          secondTmp = true;
+        }
+      }
+    )};
+    if(!(firstTmp && secondTmp)) {
+      check = false;
     }
-  }*/
+    return check;
+  }
 
-  /*addBuildings(buildings: BuildingDTO) {
-    
-    for (let i = 0; i < buildings.mudGatherersCottageQuantity; i++) {
-      this.buildingsArray.push(new Building(1,'Mud Gatherer\'s Cottage'))   
+  checkGoblinsCavern(): boolean {
+    let check = true;
+    let firstTmp = false
+    let secondTmp = false
+    if(this._buildings == undefined) {
+      check = false;
+    } else if (this._resources == undefined) {
+      check = false;
+    } else {
+      this._resources.forEach(current => { 
+        if(current.type === "MUD" && current.amount >= 4000) {
+          firstTmp = true;
+        } else if (current.type === "STONE" && current.amount >= 2000) {
+          secondTmp = true;
+        }
+      });
+      if(!(firstTmp && secondTmp)) {
+        check = false;
+      } else {
+        this._buildings.forEach(current => { 
+          if(current.type === "CAVERN") {
+            check = false;
+          }
+        });
+      }
     }
-    for (let i = 0; i < buildings.stoneQuarryQuantity; i++) {
-      this.buildingsArray.push(new Building(2,'Stone Quarry'))   
+    return check;
+  }
+
+  checkOrcsPit(): boolean {
+    let check = true;
+    let firstTmp = false
+    let secondTmp = false
+    if(this._buildings == undefined) {
+      check = false;
+    } else if (this._resources == undefined) {
+      check = false;
+    } else {
+      this._resources.forEach(current => { 
+        if(current.type === "MUD" && current.amount >= 8000) {
+          firstTmp = true;
+        } else if (current.type === "STONE" && current.amount >= 4000) {
+          secondTmp = true;
+        }
+      });
+      if(!(firstTmp && secondTmp)) {
+        check = false;
+      } else {
+        this._buildings.forEach(current => { 
+          if(current.type === "PIT") {
+            check = false;
+          } else if (current.type === "CAVERN") {
+            check = true;
+          }
+        });
+      }
     }
-    for (let i = 0; i < buildings.huntersHutQuantity; i++) {
-      this.buildingsArray.push(new Building(3,'Hunter\'s Hut'))   
-    }
-  }*/
+    return check;
+  }
+
+  checkTrollsCave(): boolean {
+    let check = true;
+    let firstTmp = false
+    let secondTmp = false
+    if(this._buildings == undefined) {
+      check = false;
+    } else if (this._resources == undefined) {
+      check = false;
+    } else {
+      this._resources.forEach(current => { 
+        if(current.type === "MUD" && current.amount >= 20000) {
+          firstTmp = true;
+        } else if (current.type === "STONE" && current.amount >= 10000) {
+          secondTmp = true;
+        }
+      });
+      if(!(firstTmp && secondTmp)) {
+        check = false;
+      } else {
+        this._buildings.forEach(current => { 
+          if(current.type === "CAVE") {
+            check = false;
+          } else if (current.type === "PIT") {
+            check = true;
+          }
+        });
+      }
+    } 
+    return check;
+  }
 }
