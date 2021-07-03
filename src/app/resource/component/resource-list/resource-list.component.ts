@@ -17,9 +17,12 @@ export class ResourceListComponent implements OnInit {
   constructor(private _resourceService: ResourceService, private _route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.getResources();
-    timer(1000, 1000).subscribe(timer => {
+    let sub = timer(0, 1000).subscribe(timer => {
+      if(localStorage.getItem('user') === null) {
+        sub.unsubscribe();
+      } else {
       this.getResources();
+      }
     });
   }
 

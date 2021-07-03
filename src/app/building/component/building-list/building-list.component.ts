@@ -23,13 +23,14 @@ export class BuildingListComponent implements OnInit {
   constructor(private _buildingService: BuildingService, private _route: ActivatedRoute, private _resourceService: ResourceService) { }
 
   ngOnInit(): void {
-    this.getBuildings();
-    this.getResources();
-    timer(1000, 1000).subscribe(timer => {
-      this.getBuildings();
-    this.getResources();
-    });
-
+      let sub = timer(0, 1000).subscribe(timer => {
+        if(localStorage.getItem('user') === null) {
+            sub.unsubscribe();
+        } else {
+          this.getBuildings();
+          this.getResources();
+        }
+      });
   }
 
   getBuildings(): void {
@@ -145,13 +146,12 @@ export class BuildingListComponent implements OnInit {
   }
 
   checkGoblinsCavern(): boolean {
-    let check = true;
     let firstTmp = false
     let secondTmp = false
     if(this._buildings == undefined) {
-      check = false;
+      return false;
     } else if (this._resources == undefined) {
-      check = false;
+      return false;
     } else {
       this._resources.forEach(current => { 
         if(current.type === "MUD" && current.amount >= 4000) {
@@ -161,26 +161,27 @@ export class BuildingListComponent implements OnInit {
         }
       });
       if(!(firstTmp && secondTmp)) {
-        check = false;
+        return false;
       } else {
+        let check = true;
         this._buildings.forEach(current => { 
           if(current.type === "CAVERN") {
             check = false;
+            return;
           }
         });
+        return check;
       }
     }
-    return check;
   }
 
   checkOrcsPit(): boolean {
-    let check = true;
     let firstTmp = false
     let secondTmp = false
     if(this._buildings == undefined) {
-      check = false;
+      return false;
     } else if (this._resources == undefined) {
-      check = false;
+      return false;
     } else {
       this._resources.forEach(current => { 
         if(current.type === "MUD" && current.amount >= 8000) {
@@ -190,28 +191,31 @@ export class BuildingListComponent implements OnInit {
         }
       });
       if(!(firstTmp && secondTmp)) {
-        check = false;
+        return false;
       } else {
+        let check = false;
         this._buildings.forEach(current => { 
           if(current.type === "PIT") {
             check = false;
-          } else if (current.type === "CAVERN") {
+            return;
+          }
+          if (current.type === "CAVERN") {
             check = true;
+            return;
           }
         });
+        return check;
       }
     }
-    return check;
   }
 
   checkTrollsCave(): boolean {
-    let check = true;
     let firstTmp = false
     let secondTmp = false
     if(this._buildings == undefined) {
-      check = false;
+      return false;
     } else if (this._resources == undefined) {
-      check = false;
+      return false;
     } else {
       this._resources.forEach(current => { 
         if(current.type === "MUD" && current.amount >= 20000) {
@@ -220,18 +224,22 @@ export class BuildingListComponent implements OnInit {
           secondTmp = true;
         }
       });
-      if(!(firstTmp && secondTmp)) {
-        check = false;
+      if (!(firstTmp && secondTmp)) {
+        return false;
       } else {
+        let check = false;
         this._buildings.forEach(current => { 
-          if(current.type === "CAVE") {
+          if (current.type === "CAVE") {
             check = false;
-          } else if (current.type === "PIT") {
-            check = true;
+            return;
           }
+          if (current.type === "PIT") {
+            check = true;
+            return;
+          } 
         });
+        return check;
       }
     } 
-    return check;
   }
 }

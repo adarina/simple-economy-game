@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+.content {
+    width: 1000px;
+    margin: 0 auto;
+    background: lightsteelblue;
+    padding: 25px;
+}
+
+body {
+    background-size: 1000px;
+    margin: 0px;
+}

@@ -14,6 +14,8 @@ export class LoginComponent implements OnInit {
 
   public _login: string;
 
+  public _logout: string;
+
   public _password: string;
 
   public _id: number;
@@ -40,6 +42,14 @@ export class LoginComponent implements OnInit {
 
   get login(): string {
     return this._login;
+  }
+
+  set logout(logout: string) {
+    this._logout = logout;
+  }
+
+  get logout(): string {
+    return this._logout;
   }
 
   set password(password: string) {
@@ -83,7 +93,7 @@ export class LoginComponent implements OnInit {
   }
 
   onLogout(): void {
-    localStorage.removeItem('user');
     this._router.navigateByUrl('/');
+    localStorage.removeItem('user');
   }
 }

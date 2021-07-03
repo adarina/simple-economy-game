@@ -24,12 +24,18 @@ export class UserService {
     return this._http.get<GetUserResponse>('http://localhost:8080/api/users', {headers}).
         pipe(map(value => {
           let users = new Array<User>();
-          value.users.forEach(resource => {
-              users.push(new User(resource.id, resource.username)); 
+          value.users.forEach(user => {
+              users.push(new User(user.id, user.username, user.password)); 
           })
-          //console.log(users)
           return users;
         }))
   }
-  
+
+  addUser(username: string, password: string) {
+    let headers = new HttpHeaders();
+    headers = headers.set('Data-Type', 'json');
+    let newUser: User = new User(null, username, password);
+    console.log(newUser)
+    return this._http.post('http://localhost:8080/api/users', newUser, {headers});
+  }
 }

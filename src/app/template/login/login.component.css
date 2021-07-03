@@ -1,0 +1,22 @@
+.login {
+    display: grid;
+    grid-template-columns: 65px 170px 65px 170px 80px;
+    column-gap: 10px;
+    position: relative;
+    left: 205px;
+ 
+}
+
+.logout, .logout-name {
+    display: grid;
+    grid-template-columns: 800px 80px;
+    column-gap: 10px;
+    position: relative;
+    left: 55px;
+ 
+}
+
+.logout-name {
+    text-align-last: right;
+    left: 0px;
+}
