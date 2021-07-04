@@ -20,17 +20,18 @@ export class ResourceService {
 
   getResources(name: string): Observable<Array<Resource>> {
     let user = JSON.parse(localStorage.getItem('user'));
-    if(user !== null) {
-    let headers = new HttpHeaders();
-    headers = headers.set('Data-Type', 'json');
-    return this._http.get<GetResourceResponse>('http://localhost:8080/api/users/'+ user.id +'/resources', {headers}).
+    if (user !== null) {
+      let headers = new HttpHeaders();
+      headers = headers.set('Data-Type', 'json');
+      return this._http.get<GetResourceResponse>('http://localhost:8080/api/users/' + user.id + '/resources', { headers }).
         pipe(map(value => {
           let resources = new Array<Resource>();
           value.resources.forEach(resource => {
-              resources.push(new Resource(resource.id, resource.type, resource.amount)); 
+            resources.push(new Resource(resource.id, resource.type, resource.amount));
           })
           return resources;
         }))
-  } return null;
+    }
+    return null;
   }
 }

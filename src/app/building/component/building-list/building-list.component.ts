@@ -23,39 +23,39 @@ export class BuildingListComponent implements OnInit {
   constructor(private _buildingService: BuildingService, private _route: ActivatedRoute, private _resourceService: ResourceService) { }
 
   ngOnInit(): void {
-      let sub = timer(0, 1000).subscribe(timer => {
-        if(localStorage.getItem('user') === null) {
-            sub.unsubscribe();
-        } else {
-          this.getBuildings();
-          this.getResources();
-        }
-      });
+    let sub = timer(0, 1000).subscribe(timer => {
+      if (localStorage.getItem('user') === null) {
+        sub.unsubscribe();
+      } else {
+        this.getBuildings();
+        this.getResources();
+      }
+    });
   }
 
   getBuildings(): void {
     if (this._route.snapshot.paramMap) {
-        this._buildingService.getBuildings(this._route.snapshot.paramMap.get('buildings')).subscribe(value => {
-          this._buildings = value;
+      this._buildingService.getBuildings(this._route.snapshot.paramMap.get('buildings')).subscribe(value => {
+        this._buildings = value;
       },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      })
+        error => {
+          console.log(error);
+          console.log(error.status);
+          console.log(error.error);
+        })
     }
   }
 
   getResources(): void {
     if (this._route.snapshot.paramMap) {
-      this._resourceService.getResources(this._route.snapshot.paramMap.get('resources')).subscribe(value => { 
+      this._resourceService.getResources(this._route.snapshot.paramMap.get('resources')).subscribe(value => {
         this._resources = value;
       },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      });
+        error => {
+          console.log(error);
+          console.log(error.status);
+          console.log(error.error);
+        });
     }
   }
 
@@ -79,46 +79,48 @@ export class BuildingListComponent implements OnInit {
       });
   }
 
-  getBuilding(id: number) : void {
-    this._buildingService.getBuilding(id).subscribe(data => { 
+  getBuilding(id: number): void {
+    this._buildingService.getBuilding(id).subscribe(data => {
       this._building = data;
     },
-    error => {
-      console.log(error); 
-      console.log(error.status); 
-      console.log(error.error);
-    });
+      error => {
+        console.log(error);
+        console.log(error.status);
+        console.log(error.error);
+      });
   }
 
   checkMudGatherersCottage(): boolean {
     let check = true;
-    if(this._buildings == undefined) {
+    if (this._buildings == undefined) {
       check = false;
     } else if (this._resources == undefined) {
       check = false;
     } else {
-      this._resources.forEach(current => { 
-        if(current.type === "MUD" && current.amount <= 100) {
+      this._resources.forEach(current => {
+        if (current.type === "MUD" && current.amount <= 100) {
           check = false;
         }
       }
-    )};
+      )
+    };
     return check;
   }
 
   checkStoneQuarry(): boolean {
     let check = true;
-    if(this._buildings == undefined) {
+    if (this._buildings == undefined) {
       check = false;
     } else if (this._resources == undefined) {
       check = false;
     } else {
-      this._resources.forEach(current => { 
-        if(current.type === "MUD" && current.amount <= 1000) {
+      this._resources.forEach(current => {
+        if (current.type === "MUD" && current.amount <= 1000) {
           check = false;
         }
       }
-    )};
+      )
+    };
     return check;
   }
 
@@ -126,20 +128,21 @@ export class BuildingListComponent implements OnInit {
     let check = true;
     let firstTmp = false
     let secondTmp = false
-    if(this._buildings == undefined) {
+    if (this._buildings == undefined) {
       check = false;
     } else if (this._resources == undefined) {
       check = false;
     } else {
-      this._resources.forEach(current => { 
-        if(current.type === "MUD" && current.amount >= 2000) {
+      this._resources.forEach(current => {
+        if (current.type === "MUD" && current.amount >= 2000) {
           firstTmp = true;
         } else if (current.type === "STONE" && current.amount >= 1000) {
           secondTmp = true;
         }
       }
-    )};
-    if(!(firstTmp && secondTmp)) {
+      )
+    };
+    if (!(firstTmp && secondTmp)) {
       check = false;
     }
     return check;
@@ -148,24 +151,24 @@ export class BuildingListComponent implements OnInit {
   checkGoblinsCavern(): boolean {
     let firstTmp = false
     let secondTmp = false
-    if(this._buildings == undefined) {
+    if (this._buildings == undefined) {
       return false;
     } else if (this._resources == undefined) {
       return false;
     } else {
-      this._resources.forEach(current => { 
-        if(current.type === "MUD" && current.amount >= 4000) {
+      this._resources.forEach(current => {
+        if (current.type === "MUD" && current.amount >= 4000) {
           firstTmp = true;
         } else if (current.type === "STONE" && current.amount >= 2000) {
           secondTmp = true;
         }
       });
-      if(!(firstTmp && secondTmp)) {
+      if (!(firstTmp && secondTmp)) {
         return false;
       } else {
         let check = true;
-        this._buildings.forEach(current => { 
-          if(current.type === "CAVERN") {
+        this._buildings.forEach(current => {
+          if (current.type === "CAVERN") {
             check = false;
             return;
           }
@@ -178,24 +181,24 @@ export class BuildingListComponent implements OnInit {
   checkOrcsPit(): boolean {
     let firstTmp = false
     let secondTmp = false
-    if(this._buildings == undefined) {
+    if (this._buildings == undefined) {
       return false;
     } else if (this._resources == undefined) {
       return false;
     } else {
-      this._resources.forEach(current => { 
-        if(current.type === "MUD" && current.amount >= 8000) {
+      this._resources.forEach(current => {
+        if (current.type === "MUD" && current.amount >= 8000) {
           firstTmp = true;
         } else if (current.type === "STONE" && current.amount >= 4000) {
           secondTmp = true;
         }
       });
-      if(!(firstTmp && secondTmp)) {
+      if (!(firstTmp && secondTmp)) {
         return false;
       } else {
         let check = false;
-        this._buildings.forEach(current => { 
-          if(current.type === "PIT") {
+        this._buildings.forEach(current => {
+          if (current.type === "PIT") {
             check = false;
             return;
           }
@@ -212,13 +215,13 @@ export class BuildingListComponent implements OnInit {
   checkTrollsCave(): boolean {
     let firstTmp = false
     let secondTmp = false
-    if(this._buildings == undefined) {
+    if (this._buildings == undefined) {
       return false;
     } else if (this._resources == undefined) {
       return false;
     } else {
-      this._resources.forEach(current => { 
-        if(current.type === "MUD" && current.amount >= 20000) {
+      this._resources.forEach(current => {
+        if (current.type === "MUD" && current.amount >= 20000) {
           firstTmp = true;
         } else if (current.type === "STONE" && current.amount >= 10000) {
           secondTmp = true;
@@ -228,7 +231,7 @@ export class BuildingListComponent implements OnInit {
         return false;
       } else {
         let check = false;
-        this._buildings.forEach(current => { 
+        this._buildings.forEach(current => {
           if (current.type === "CAVE") {
             check = false;
             return;
@@ -236,10 +239,10 @@ export class BuildingListComponent implements OnInit {
           if (current.type === "PIT") {
             check = true;
             return;
-          } 
+          }
         });
         return check;
       }
-    } 
+    }
   }
 }

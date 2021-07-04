@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '../../service/user.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { UserService } from '../../service/user.service';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(private _userService: UserService) { }
+  constructor(private _userService: UserService, private _router: Router) { }
 
   public _username: string;
 
@@ -17,7 +18,6 @@ export class RegisterComponent implements OnInit {
   public _confirmation: string;
 
   ngOnInit(): void {
-    console.log("lol")
   }
 
   set username(username: string) {
@@ -46,13 +46,21 @@ export class RegisterComponent implements OnInit {
 
 
   registerUser(): void {
-    this._userService.addUser(this._username, this._password).subscribe(data => {
-      this.ngOnInit();
-    },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      });
+    if (this._confirmation === "") {
+      prompt("Confirm Password is required");
+    } else if (this._password === "") {
+      prompt("Password is required");
+    } else if (this._password === this._confirmation) {
+      this._userService.addUser(this._username, this._password).subscribe(data => {
+        this._router.navigateByUrl('/');
+      },
+        error => {
+          console.log(error);
+          console.log(error.status);
+          console.log(error.error);
+        });
+    } else {
+      prompt("Passwords must match");
+    }
   }
 }

@@ -9,21 +9,21 @@ import { Building } from '../model/building';
   providedIn: 'root'
 })
 export class BuildingService {
-  
+
   constructor(private _http: HttpClient) { }
 
   getBuildings(name: string): Observable<Array<Building>> {
     let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
     headers = headers.set('Data-Type', 'json');
-    return this._http.get<GetBuildingResponse>('http://localhost:8080/api/users/'+ user.id +'/buildings', {headers}).
-        pipe(map(value => {
-          let buildings = new Array<Building>();
-          value.buildings.forEach(building => {
-              buildings.push(new Building(building.id, building.type)); 
-          })
-          return buildings;
-        }))
+    return this._http.get<GetBuildingResponse>('http://localhost:8080/api/users/' + user.id + '/buildings', { headers }).
+      pipe(map(value => {
+        let buildings = new Array<Building>();
+        value.buildings.forEach(building => {
+          buildings.push(new Building(building.id, building.type));
+        })
+        return buildings;
+      }))
   }
 
   addBuilding(type: string) {
@@ -32,13 +32,13 @@ export class BuildingService {
     headers = headers.set('Data-Type', 'json');
     let building: Building = new Building(null, type);
     console.log(building)
-    return this._http.post('http://localhost:8080/api/users/'+ user.id +'/buildings', building, {headers});
+    return this._http.post('http://localhost:8080/api/users/' + user.id + '/buildings', building, { headers });
   }
 
   getBuilding(id: number): Observable<Building> {
     let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
     headers = headers.set('Data-Type', 'json');
-    return this._http.get<Building>('http://localhost:8080/api/users/'+ user.id +'/buildings/'+ id, {headers})
+    return this._http.get<Building>('http://localhost:8080/api/users/' + user.id + '/buildings/' + id, { headers })
   }
 }

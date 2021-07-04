@@ -1,8 +1,23 @@
-.unit-title, .unit-list { 
+.unit-title,
+.unit-list {
     display: grid;
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(247, 218, 138);
+    text-align: center;
+    background: rgb(238, 185, 10);
 }
 
-.unit-list { 
-    grid-gap: 150px;
-    grid-template-columns: 110px 110px 110px; 
+.unit-list {
+    font-size: 20px;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 4px solid rgb(197, 141, 21);
+    color: rgb(197, 141, 21);
+    padding: 30px;
+    background-color: rgb(253, 227, 108);
+    ;
+}
+
+.unit-title {
+    border-bottom: 4px solid rgb(197, 141, 21);
 }

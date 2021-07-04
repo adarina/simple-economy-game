@@ -1,0 +1,26 @@
+nav.navigation ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(83, 30, 30);
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+}
+
+nav.navigation a {
+    text-decoration: none;
+    display: block;
+    color: rgb(156, 112, 112);
+    text-align: center;
+    padding: 14px 16px;
+}
+
+nav.navigation a:hover {
+    background-color: rgb(105, 84, 84);
+}
+
+.navigation {
+    border-bottom: 4px solid rgb(54, 20, 20);
+    ;
+}

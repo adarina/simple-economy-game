@@ -1,14 +1,12 @@
 <div class="unit-single" *ngIf="unit">
-    Type: {{unit.type}}<br>
-    Amount: {{unit.amount}}<br>
-    Active: {{unit.active}}
+    Type: {{unit.type}}<br> Amount: {{unit.amount}}<br> Active: {{unit.active}}
     <form (ngSubmit)="editUnit(unit.id, unit.type)">
         <div class="unit-form">
-            <input type="text" [(ngModel)]="amount" name="amount"/>
+            <input type="text" [(ngModel)]="amount" name="amount" />
         </div>
         <div class="unit-button">
-            <input type="submit" value="recruit" (click)="onItemSelector('recruit')"/>
-            <input type="submit" value="release" (click)="onItemSelector('release')"/>
+            <input type="submit" value="recruit" (click)="onItemSelector('recruit')" />
+            <input type="submit" value="release" (click)="onItemSelector('release')" />
         </div>
     </form>
 </div>

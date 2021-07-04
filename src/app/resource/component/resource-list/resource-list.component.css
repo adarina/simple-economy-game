@@ -1,8 +1,19 @@
-.resource-title, .resource-list { 
+.resource-title,
+.resource-list {
     display: grid;
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(194, 157, 127);
+    text-align: center;
+    background: rgb(94, 58, 37);
 }
 
-.resource-list { 
-    grid-gap: 150px;
-    grid-template-columns: 110px 110px 110px; 
+.resource-list {
+    font-size: 20px;
+    color: rgb(77, 38, 15);
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.resource-title {
+    border-top: 4px solid rgb(54, 20, 20);
 }

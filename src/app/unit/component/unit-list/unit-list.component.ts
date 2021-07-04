@@ -15,7 +15,7 @@ export class UnitListComponent implements OnInit {
   constructor(private _unitService: UnitService, private _route: ActivatedRoute) { }
 
   ngOnInit(): void {
-      this.getUnits();
+    this.getUnits();
   }
 
   getUnits(): void {
@@ -23,11 +23,11 @@ export class UnitListComponent implements OnInit {
       this._unitService.getUnits(this._route.snapshot.paramMap.get('units')).subscribe(value => {
         this._units = value
       },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      });
+        error => {
+          console.log(error);
+          console.log(error.status);
+          console.log(error.error);
+        });
     }
   }
 

@@ -1,11 +1,29 @@
 .register {
     display: grid;
     justify-items: center;
+    background-color: rgb(194, 157, 127);
+    height: 800px;
+    border-top: 4px solid rgb(54, 20, 20);
+    border-bottom: 4px solid rgb(54, 20, 20);
 }
 
 .register-input {
+    background-color: rgb(194, 157, 127);
+    padding-top: 50px;
     display: grid;
-    row-gap: 10px; 
+    row-gap: 10px;
+    color: rgb(54, 20, 20);
+    font-weight: bold;
     grid-template-rows: 20px 25px 20px 25px 20px 25px 30px;
-    grid-template-columns: 200px; 
+    grid-template-columns: 200px;
+}
+
+.register-title {
+    display: grid;
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(194, 157, 127);
+    text-align: center;
+    background: rgb(94, 58, 37);
+    border-top: 4px solid rgb(54, 20, 20);
 }

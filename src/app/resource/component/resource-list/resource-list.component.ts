@@ -18,24 +18,24 @@ export class ResourceListComponent implements OnInit {
 
   ngOnInit() {
     let sub = timer(0, 1000).subscribe(timer => {
-      if(localStorage.getItem('user') === null) {
+      if (localStorage.getItem('user') === null) {
         sub.unsubscribe();
       } else {
-      this.getResources();
+        this.getResources();
       }
     });
   }
 
   getResources(): void {
     if (this._route.snapshot.paramMap) {
-      this._resourceService.getResources(this._route.snapshot.paramMap.get('resources')).subscribe(value => { 
+      this._resourceService.getResources(this._route.snapshot.paramMap.get('resources')).subscribe(value => {
         this._resources = value;
       },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      });
+        error => {
+          console.log(error);
+          console.log(error.status);
+          console.log(error.error);
+        });
     }
   }
 

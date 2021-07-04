@@ -1,0 +1,11 @@
+header {
+    background-color: rgb(156, 112, 112);
+    height: 150px;
+    text-justify: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(83, 30, 30);
+    text-align: center;
+    padding: 25px;
+    border-bottom: 4px solid rgb(54, 20, 20);
+}

@@ -22,11 +22,32 @@ export class ResourceSingleComponent implements OnInit {
   }
 
   @Input()
-  set resource(resource:Resource) {
+  set resource(resource: Resource) {
     this._resource = resource;
   }
 
   get resource(): Resource {
     return this._resource;
+  }
+
+  checkMud(checkType: string): boolean {
+    if (checkType === "MUD") {
+      return true;
+    }
+    return false;
+  }
+
+  checkStone(checkType: string): boolean {
+    if (checkType === "STONE") {
+      return true;
+    }
+    return false;
+  }
+
+  checkMeat(checkType: string): boolean {
+    if (checkType === "MEAT") {
+      return true;
+    }
+    return false;
   }
 }

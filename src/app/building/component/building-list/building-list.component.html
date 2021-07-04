@@ -1,4 +1,6 @@
-<div class="building-title"><h3>Building Shop</h3></div>
+<div class="building-title-shop">
+    <p>Building Shop</p>
+</div>
 <div class="building-shop">
     <button *ngIf="checkMudGatherersCottage()" (click)="addBuilding('COTTAGE')">Mud Gatherer's Cottage</button>
     <button *ngIf="checkStoneQuarry()" (click)="addBuilding('QUARRY')">Stone Quarry</button>
@@ -7,11 +9,9 @@
     <button *ngIf="checkOrcsPit()" (click)="addBuilding('PIT')">Orc's Pit</button>
     <button *ngIf="checkTrollsCave()" (click)="addBuilding('CAVE')">Troll's Cave</button>
 </div>
-<div class="building-title"><h3>Building List</h3></div>
+<div class="building-title">
+    <p>Building List</p>
+</div>
 <div class="building-list">
     <app-building-single *ngFor="let building of buildings" [building]="building"></app-building-single>
 </div>
-
-
-
-

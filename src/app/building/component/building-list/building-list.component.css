@@ -1,13 +1,39 @@
-.building-title, .building-list, .building-shop { 
+.building-title-shop,
+.building-shop {
     display: grid;
+    background-color: rgb(63, 70, 49);
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(134, 150, 103);
+    text-align: center;
 }
 
-.building-list { 
-    grid-gap: 50px;
-    grid-template-columns: 100px 100px 100px 100px 100px; 
+.building-title {
+    display: grid;
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(247, 218, 138);
+    text-align: center;
+    background: rgb(238, 185, 10);
 }
 
-.building-shop { 
-    grid-gap: 10px;
-    grid-template-columns: 170px 170px 170px 170px; 
+.building-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 143px;
+    font-size: 20px;
+    border-bottom: 4px solid rgb(197, 141, 21);
+    border-top: 4px solid rgb(197, 141, 21);
+    color: rgb(197, 141, 21);
+    background-color: rgb(253, 227, 108);
+    ;
+}
+
+.building-shop {
+    grid-template-columns: 170px 170px 170px 170px;
+    border-top: 4px solid rgb(48, 54, 35);
+    border-bottom: 4px solid rgb(48, 54, 35);
+    background-color: rgb(134, 150, 103);
+    padding: 25px;
+    column-gap: 25px;
 }

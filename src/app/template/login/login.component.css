@@ -1,22 +1,35 @@
-.login {
+.login,
+.login-name {
     display: grid;
-    grid-template-columns: 65px 170px 65px 170px 80px;
+    grid-template-columns: 451px 170px 80px 170px 80px;
     column-gap: 10px;
     position: relative;
-    left: 205px;
- 
+    background-color: rgb(105, 84, 84);
+    font-weight: bold;
+    padding: 2px;
 }
 
-.logout, .logout-name {
+.login-name {
+    text-align-last: right;
+}
+
+.login-password {
+    padding: 2px;
+    text-align-last: right;
+}
+
+.logout,
+.logout-name {
     display: grid;
-    grid-template-columns: 800px 80px;
-    column-gap: 10px;
+    grid-template-columns: 792px 80px;
+    column-gap: 120px;
     position: relative;
-    left: 55px;
- 
+    background-color: rgb(105, 84, 84);
+    font-weight: bold;
+    padding: 2px;
 }
 
 .logout-name {
     text-align-last: right;
-    left: 0px;
+    left: 115px;
 }

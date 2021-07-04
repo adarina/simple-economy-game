@@ -6,9 +6,9 @@
 </div>
 <div class="login" *ngIf="!user">
     <form class="login" (ngSubmit)="onLogin()">
-        <label for="login">Username:</label>
+        <label class="login-name" for="login">Username:</label>
         <input type="text" [(ngModel)]="login" name="login" />
-        <label for="password">Password:</label>
+        <label class="login-password" for="password">Password:</label>
         <input type="text" [(ngModel)]="password" name="password" />
         <input type="submit" value="Login" />
     </form>

@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
       user = localStorage.getItem('user');
       let parsed = JSON.parse(user);
       user = parsed.login;
-    } 
+    }
     return user;
   }
 
@@ -67,21 +67,21 @@ export class LoginComponent implements OnInit {
 
   getUsers(): void {
     if (this._route.snapshot.paramMap) {
-      this._userService.getUsers(this._route.snapshot.paramMap.get('users')).subscribe(value => { 
+      this._userService.getUsers(this._route.snapshot.paramMap.get('users')).subscribe(value => {
         this._users = value;
       },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      });
+        error => {
+          console.log(error);
+          console.log(error.status);
+          console.log(error.error);
+        });
     }
   }
 
   checkUser(): void {
     console.log(this._users)
     this._users.forEach(current => {
-     if(current.username === this._login) {
+      if (current.username === this._login) {
         let user = {
           auth: btoa(current.id + ":" + this._password),
           id: current.id,

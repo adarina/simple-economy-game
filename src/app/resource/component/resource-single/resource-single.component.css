@@ -1,4 +1,24 @@
-.resource-single { 
+.resource-single {
     display: grid;
-    row-gap: 5px;   
+    grid-template-columns: 2fr 1fr;
+    background-color: rgb(194, 157, 127);
+    border-top: 4px solid rgb(77, 38, 15);
+    border-bottom: 4px solid rgb(77, 38, 15);
+}
+
+img {
+    width: 180px;
+}
+
+.resource-single>.img-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.resource-single>.amount-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
