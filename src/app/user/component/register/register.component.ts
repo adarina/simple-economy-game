@@ -52,7 +52,7 @@ export class RegisterComponent implements OnInit {
       prompt("Password is required");
     } else if (this._password === this._confirmation) {
       this._userService.addUser(this._username, this._password).subscribe(data => {
-        this._router.navigateByUrl('/');
+        window.location.reload();
       },
         error => {
           console.log(error);

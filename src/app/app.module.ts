@@ -19,6 +19,10 @@ import { BuildingManagementComponent } from './building/component/building-manag
 import { UnitSingleComponent } from './unit/component/unit-single/unit-single.component';
 import { UnitListComponent } from './unit/component/unit-list/unit-list.component';
 import { UnitManagementComponent } from './unit/component/unit-management/unit-management.component';
+import { UserManagementComponent } from './template/management/user-management/user-management.component';
+import { UserDeleteComponent } from './template/management/user-delete/user-delete.component';
+import { UserListComponent } from './template/management/user-list/user-list.component';
+import { UserSingleComponent } from './template/management/user-single/user-single.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,11 @@ import { UnitManagementComponent } from './unit/component/unit-management/unit-m
     UnitListComponent,
     NavigationComponent,
     RegisterManagementComponent,
-    BuildingManagementComponent
+    BuildingManagementComponent,
+    UserManagementComponent,
+    UserDeleteComponent,
+    UserListComponent,
+    UserSingleComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,7 @@
+.user-single {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    background-color: rgb(196, 161, 185);
+    padding: 4px;
+    text-align: center;
+}

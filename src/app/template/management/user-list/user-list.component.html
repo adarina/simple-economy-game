@@ -1,0 +1,12 @@
+<div class="user-is" *ngIf="user">
+    <div class="user-title">
+        <p>User List</p>
+    </div>
+    <div class="user-list">
+       <div class="column">Id</div>
+        <div class="column">Username</div>
+        <div class="column">Role</div>
+        <div class="column">Delete</div>
+    </div>
+    <app-user-single *ngFor="let user of users" [user]="user"></app-user-single>
+</div>

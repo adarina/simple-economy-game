@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from 'src/app/user/service/user.service';
 import { User } from '../../user/model/user';
 
@@ -19,6 +19,8 @@ export class LoginComponent implements OnInit {
   public _password: string;
 
   public _id: number;
+
+  public _role: string;
 
   constructor(private _userService: UserService, private _route: ActivatedRoute, private _router: Router) { }
 
@@ -60,6 +62,14 @@ export class LoginComponent implements OnInit {
     return this._password;
   }
 
+  set role(role: string) {
+    this._role = role;
+  }
+
+  get role(): string {
+    return this._role;
+  }
+
   onLogin(): void {
     this.checkUser();
     this._router.navigateByUrl('/buildings');
@@ -85,7 +95,9 @@ export class LoginComponent implements OnInit {
         let user = {
           auth: btoa(current.id + ":" + this._password),
           id: current.id,
-          login: current.username
+          login: current.username,
+          role: current.role
+          
         }
         localStorage.setItem('user', JSON.stringify(user));
       }

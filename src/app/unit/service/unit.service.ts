@@ -33,12 +33,13 @@ export class UnitService {
     return this._http.get<Unit>('http://localhost:8080/api/users/' + user.id + '/units/' + id, { headers })
   }
 
-  addUnit(type: string, amount: number) {
+  updateUnit(id: number, type: string, amount: number) {
+   
     let user = JSON.parse(localStorage.getItem('user'));
+    let unit: Unit = new Unit(id, type, amount, true)
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
-    let unit: Unit = new Unit(null, type, amount, null);
-    console.log(unit);
-    return this._http.put('http://localhost:8080/api/users/' + user.id + '/units/1/', unit, { headers });
+
+    return this._http.put('http://localhost:8080/api/users/' + user.id + '/units/' + unit.id, unit, { headers });
   }
 }

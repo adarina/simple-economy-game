@@ -1,0 +1,18 @@
+.management {
+    display: grid;
+    background-color: rgb(78, 96, 112);
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(146, 160, 190);
+    text-align: center;
+}
+
+.management-background {
+    background-color: rgb(146, 160, 190);
+    border-bottom: 4px solid rgb(52, 55, 80);
+    border-top: 4px solid rgb(52, 55, 80);
+}
+
+.user {
+    padding: 30px;
+}

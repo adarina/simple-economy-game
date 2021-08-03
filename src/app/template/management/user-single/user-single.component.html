@@ -1,0 +1,10 @@
+<div class="user-single" *ngIf="user">
+    <div class="column">{{user.id}}</div>
+    <div class="column">{{user.username}}</div>
+    <div class="column">{{user.role}}</div>
+    <div class="column">
+        <form (ngSubmit)="deleteUser(user.id)">
+            <input type="submit" value="Delete" (click)="onItemSelector('Delete')" />
+        </form>
+    </div>
+</div>

@@ -54,7 +54,7 @@ export class UnitSingleComponent implements OnInit {
     if (this._value == 'release') {
       this._amount = -this._amount;
     }
-    this._unitService.addUnit(type, this._amount).subscribe(data => {
+    this._unitService.updateUnit(id, type, this._amount).subscribe(data => {
       this.getUnit(id);
       this._amount = null;
     },

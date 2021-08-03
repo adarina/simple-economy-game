@@ -25,7 +25,7 @@ export class UserService {
       pipe(map(value => {
         let users = new Array<User>();
         value.users.forEach(user => {
-          users.push(new User(user.id, user.username, user.password));
+          users.push(new User(user.id, user.username, user.password, user.role));
         })
         return users;
       }))
@@ -34,8 +34,24 @@ export class UserService {
   addUser(username: string, password: string) {
     let headers = new HttpHeaders();
     headers = headers.set('Data-Type', 'json');
-    let newUser: User = new User(null, username, password);
+    let newUser: User = new User(null, username, password, "USER");
     console.log(newUser)
     return this._http.post('http://localhost:8080/api/users', newUser, { headers });
+  }
+
+  deleteUser() {
+    let headers = new HttpHeaders();
+    let user = JSON.parse(localStorage.getItem('user'));
+    console.log(user.id)
+    //headers = headers.set('Authorization', 'Basic ');
+    return this._http.delete('http://localhost:8080/api/users/' + user.id/*, {headers}*/);
+  }
+
+  deleteUserById(id: number) {
+    let headers = new HttpHeaders();
+    let user = JSON.parse(localStorage.getItem('user'));
+    console.log(user.id)
+    //headers = headers.set('Authorization', 'Basic ');
+    return this._http.delete('http://localhost:8080/api/users/' + id/*, {headers}*/);
   }
 }
