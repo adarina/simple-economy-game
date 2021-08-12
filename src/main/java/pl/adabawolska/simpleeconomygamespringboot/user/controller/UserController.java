@@ -16,6 +16,8 @@ import pl.adabawolska.simpleeconomygamespringboot.user.dto.GetUsersResponse;
 import pl.adabawolska.simpleeconomygamespringboot.user.entity.User;
 import pl.adabawolska.simpleeconomygamespringboot.user.service.UserService;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("api/users")
 public class UserController {
@@ -50,7 +52,7 @@ public class UserController {
         User user = CreateUserRequest
                 .dtoToEntityMapper()
                 .apply(request);
-        if (userService.find(user.getId()).isPresent()) {
+        if (userService.find(user.getUsername()).isPresent()) {
             return ResponseEntity.notFound().build();
         } else {
             user = userService.create(user);
@@ -64,12 +66,24 @@ public class UserController {
             Unit unitGoblin = UnitBuilder.anUnit().defaultBuildGoblinArcherEntity(user);
             Unit unitOrc = UnitBuilder.anUnit().defaultBuildOrcWarriorEntity(user);
             Unit unitTroll = UnitBuilder.anUnit().defaultBuildUglyTrollEntity(user);
+
             unitService.create(unitGoblin);
             unitService.create(unitOrc);
             unitService.create(unitTroll);
 
-            return ResponseEntity.created(builder.pathSegment("api", "users", "{id}")
-                    .buildAndExpand(user.getId()).toUri()).build();
+            return ResponseEntity.created(builder.pathSegment("api", "users", "{username}")
+                    .buildAndExpand(user.getUsername()).toUri()).build();
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+        Optional<User> user = userService.find(id);
+        if (user.isPresent()) {
+            userService.delete(user.get().getId());
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }

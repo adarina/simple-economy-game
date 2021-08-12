@@ -56,7 +56,7 @@ public class BuildingService {
             resourceService.changeMudQuantity(id, -buildingProperties.getMudGatherersCottageMudCost());
             return true;
         } else if (building.getType().equals("QUARRY")
-                && resourceMud.getAmount() >= buildingProperties.getStoneQuarryStoneCost()) {
+                && resourceMud.getAmount() >= buildingProperties.getStoneQuarryMudCost()) {
 
             resourceService.changeMudQuantity(id, -buildingProperties.getStoneQuarryMudCost());
             return true;

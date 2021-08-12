@@ -14,7 +14,7 @@ public class ResourceBuilder {
     public Resource defaultBuildMudEntity(User user) {
         Resource resource = new Resource();
         resource.setType("MUD");
-        resource.setAmount(100000L);
+        resource.setAmount(4000000L);
         resource.setUser(user);
         return resource;
     }
@@ -30,7 +30,7 @@ public class ResourceBuilder {
     public Resource defaultBuildMeatEntity(User user) {
         Resource resource = new Resource();
         resource.setType("MEAT");
-        resource.setAmount(10L);
+        resource.setAmount(1000000L);
         resource.setUser(user);
         return resource;
     }

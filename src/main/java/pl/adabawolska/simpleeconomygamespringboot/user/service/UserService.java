@@ -23,6 +23,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public Optional<User> find(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
@@ -30,6 +34,11 @@ public class UserService {
     @Transactional
     public User create(User user) {
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 
 }

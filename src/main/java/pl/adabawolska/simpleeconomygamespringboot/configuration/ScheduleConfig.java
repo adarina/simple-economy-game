@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import pl.adabawolska.simpleeconomygamespringboot.building.entity.Building;
 import pl.adabawolska.simpleeconomygamespringboot.building.properties.BuildingProperties;
 import pl.adabawolska.simpleeconomygamespringboot.building.repository.BuildingRepository;
-import pl.adabawolska.simpleeconomygamespringboot.building.service.BuildingService;
 import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
 import pl.adabawolska.simpleeconomygamespringboot.resource.repository.ResourceRepository;
 import pl.adabawolska.simpleeconomygamespringboot.resource.service.ResourceService;
@@ -23,21 +22,29 @@ import java.util.List;
 @Configuration
 @EnableScheduling
 public class ScheduleConfig {
-    private BuildingService buildingService;
+
     private final ResourceService resourceService;
-    private UnitService unitService;
+
+    private final UnitService unitService;
+
     private final UnitProperties unitProperties;
+
     private final BuildingProperties buildingProperties;
+
     private final ResourceRepository resourceRepository;
+
     private final UserRepository userRepository;
+
     private final BuildingRepository buildingRepository;
+
     private final UnitRepository unitRepository;
 
     @Autowired
-    public ScheduleConfig(BuildingService buildingService, UnitService unitService,
-                          ResourceService resourceService, UnitProperties unitProperties,
-                          BuildingProperties buildingProperties, ResourceRepository resourceRepository, UserRepository userRepository, BuildingRepository buildingRepository, UnitRepository unitRepository) {
-        this.buildingService = buildingService;
+    public ScheduleConfig(UnitService unitService, ResourceService resourceService, UnitProperties unitProperties,
+                          BuildingProperties buildingProperties, ResourceRepository resourceRepository,
+                          UserRepository userRepository, BuildingRepository buildingRepository,
+                          UnitRepository unitRepository) {
+
         this.unitService = unitService;
         this.resourceService = resourceService;
         this.unitProperties = unitProperties;
@@ -69,12 +76,16 @@ public class ScheduleConfig {
 
             List<Building> buildings = buildingRepository.findByUserId(userId);
             for (Building building: buildings) {
-                if (building.getType().equals("COTTAGE")) {
-                    newMud += buildingProperties.getMudGatherersCottageProd();
-                } else if (building.getType().equals("QUARRY")) {
-                    newStone += buildingProperties.getStoneQuarryProd();
-                } else if (building.getType().equals("HUT")) {
-                    newMeat += buildingProperties.getHuntersHutProd();
+                switch (building.getType()) {
+                    case "COTTAGE":
+                        newMud += buildingProperties.getMudGatherersCottageProd();
+                        break;
+                    case "QUARRY":
+                        newStone += buildingProperties.getStoneQuarryProd();
+                        break;
+                    case "HUT":
+                        newMeat += buildingProperties.getHuntersHutProd();
+                        break;
                 }
             }
 

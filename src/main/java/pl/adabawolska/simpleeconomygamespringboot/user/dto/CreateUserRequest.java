@@ -18,19 +18,22 @@ import java.util.function.Function;
 @EqualsAndHashCode
 public class CreateUserRequest {
 
-    private Long id;
+    //private Long id;
 
     private String username;
 
     private String password;
 
+    private String role;
+
     private List<Resource> resources;
 
     public static Function<CreateUserRequest, User> dtoToEntityMapper() {
         return request -> User.builder()
-                .id(request.getId())
+                //.id(request.getId())
                 .username(request.getUsername())
                 .password(request.getPassword())
+                .role(request.getRole())
                 .build();
     }
 }

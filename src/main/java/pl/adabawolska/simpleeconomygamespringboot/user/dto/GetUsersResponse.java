@@ -30,9 +30,9 @@ public class GetUsersResponse {
 
         private String username;
 
-        //private List<Building> building;
+        private String password;
 
-        //private List<Resource> resource;
+        private String role;
 
     }
 
@@ -47,8 +47,8 @@ public class GetUsersResponse {
                     .map(user -> User.builder()
                             .id(user.getId())
                             .username(user.getUsername())
-                            //.building(user.getBuildings())
-                            //.resource(user.getResources())
+                            .password(user.getPassword())
+                            .role(user.getRole())
                             .build())
                     .forEach(response::user);
             return response.build();

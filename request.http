@@ -22,7 +22,7 @@ GET http://localhost:8080/api/users/2/buildings
 
 ###
 
-GET http://localhost:8080/api/users/1/units/1
+GET http://localhost:8080/api/users/1/units
 
 ###
 
@@ -34,9 +34,18 @@ POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-  "id": 1,
-  "username": "Marta",
-  "password": "12384"
+  "username": "marta",
+  "password": "12",
+  "role": "USER"
+}
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+"username": "1",
+"password": "1",
+"role": "ADMIN"
 }
 
 ###
@@ -49,6 +58,8 @@ Content-Type: application/json
   "password": "12384"
 }
 
+###
+DELETE http://localhost:8080/api/users/1
 ###
 
 POST http://localhost:8080/api/users/2/buildings

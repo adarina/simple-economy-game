@@ -1,5 +1,6 @@
 package pl.adabawolska.simpleeconomygamespringboot.user.entity;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 import pl.adabawolska.simpleeconomygamespringboot.building.entity.Building;
 import pl.adabawolska.simpleeconomygamespringboot.resource.entity.Resource;
@@ -28,6 +29,9 @@ public class User implements Serializable {
     private String username;
 
     private String password;
+
+    @NotNull
+    private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @ToString.Exclude
