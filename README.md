@@ -1,4 +1,6 @@
-# SimpleEconomyGameAngular
+## Simple Economy Game Angular
+
+It's a fronted of a multi-module web application that is a simple economic game that allows you to obtain resources, build buildings and recruit an army.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.6.
 
