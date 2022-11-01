@@ -15,4 +15,7 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
     Resource findByUserIdAndType(Long userId, String type);
 
     List<Resource> findAllByUser(User user);
+
+    boolean existsResourceByUserId(Long id);
+
 }

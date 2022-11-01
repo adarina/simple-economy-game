@@ -9,6 +9,7 @@ import com.ada.simpleeconomygamespringboot.user.entity.User;
 import com.ada.simpleeconomygamespringboot.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ResourceService {
@@ -47,31 +48,10 @@ public class ResourceService {
         return resourceRepository.findByUserId(userId);
     }
 
-    public Resource saveResource(Resource resource) {
-        return resourceRepository.save(resource);
+    public boolean existsByUserId(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.isPresent();
     }
-
-    /*public Resource saveResource(Resource resource) {
-        return resourceRepository.save(resource);
-    }*/
-
-    /*public Optional<Resource> find(Long id) {
-        return resourceRepository.findById(id);
-    }
-
-    public Resource findResourceByUserId(Long id) {
-        return resourceRepository.findByUserId(id);
-    }
-
-    @Transactional
-    public Resource create(Resource resource) {
-        return resourceRepository.save(resource);
-    }
-
-    @Transactional
-    public Resource update(Resource resource) {
-        return resourceRepository.save(resource);
-    }*/
 
     @Transactional
     public Resource create(Resource resource) {

@@ -93,9 +93,9 @@ public class ScheduleConfig {
             resourceStone.setAmount(newStone);
             resourceMeat.setAmount(newMeat);
 
-            resourceService.saveResource(resourceMud);
-            resourceService.saveResource(resourceStone);
-            resourceService.saveResource(resourceMeat);
+            resourceService.create(resourceMud);
+            resourceService.create(resourceStone);
+            resourceService.create(resourceMeat);
 
             meat = resourceMeat.getAmount();
 
@@ -113,7 +113,7 @@ public class ScheduleConfig {
                 Long newMeatSum = desertion(units, resourceMeat.getAmount());
                 resourceMeat.setAmount(newMeatSum);
             }
-            resourceService.saveResource(resourceMeat);
+            resourceService.create(resourceMeat);
         }
     }
 
@@ -130,7 +130,7 @@ public class ScheduleConfig {
                     unit.setAmount(unit.getAmount() - 1);
                     meatSum += unitProperties.getUglyTrollMeatCost();
                 }
-                unitService.saveUnit(unit);
+                unitService.update(unit);
             }
         }
         return meatSum;

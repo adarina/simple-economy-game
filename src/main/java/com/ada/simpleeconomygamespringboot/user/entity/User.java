@@ -26,11 +26,13 @@ public class User implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @javax.validation.constraints.NotNull
     private String username;
 
+    @javax.validation.constraints.NotNull
     private String password;
 
-    @NotNull
+    @javax.validation.constraints.NotNull
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)

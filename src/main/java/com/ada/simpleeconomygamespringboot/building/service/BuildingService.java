@@ -20,19 +20,21 @@ import java.util.Optional;
 @Service
 public class BuildingService {
 
-    private final BuildingRepository buildingRepository;
+    private  BuildingRepository buildingRepository;
 
-    private final BuildingProperties buildingProperties;
+    private  BuildingProperties buildingProperties;
 
-    private final UserRepository userRepository;
+    private  UserRepository userRepository;
 
-    private final ResourceRepository resourceRepository;
+    private  ResourceRepository resourceRepository;
 
-    private final ResourceService resourceService;
+    private  ResourceService resourceService;
 
-    private final UnitService unitService;
+    private  UnitService unitService;
 
+    public BuildingService() {
 
+    }
     @Autowired
     public BuildingService(BuildingRepository buildingRepository, BuildingProperties buildingProperties,
                            UserRepository userRepository, ResourceRepository resourceRepository,
@@ -138,5 +140,10 @@ public class BuildingService {
 
     public List<Building> findAllBuildings() {
         return buildingRepository.findAll();
+    }
+
+    public boolean existsByUserId(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.isPresent();
     }
 }

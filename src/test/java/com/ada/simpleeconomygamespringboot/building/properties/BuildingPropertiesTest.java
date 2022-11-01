@@ -13,23 +13,23 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = BuildingProperties.class)
 @TestPropertySource(locations = "/building.properties")
-public class BuildingPropertiesIntegrationTest {
+public class BuildingPropertiesTest {
 
     @Autowired
     BuildingProperties buildingProperties;
 
     @Test
-    public void whenBuildingQueriedthenReturnsBuilding() {
+    public void whenBuildingQueried_thenReturnsNotNull() {
         Assert.assertNotNull("Building is null!", buildingProperties.getMudGatherersCottageMudCost());
     }
 
     @Test
-    public void whenBuildingValueQueriedthenReturnsBuildingValue() {
-        Assert.assertTrue("Building is not equal!", buildingProperties.getMudGatherersCottageMudCost() == 100L);
+    public void whenBuildingQueried_thenReturnsEquals() {
+        Assert.assertEquals("Building is not equal!", 100L, (long) buildingProperties.getMudGatherersCottageMudCost());
     }
 
     @Test
-    public void givenBuildingPropertiesTest_whenVariableOneRetrieved_thenValueInFileReturned() {
+    public void givenBuildingMudGatherersCottageMudCost_whenVariableOneRetrieved_thenReturnsEqual() {
         Long output = buildingProperties.getMudGatherersCottageMudCost();
         assertThat(output).isEqualTo(100L);
     }

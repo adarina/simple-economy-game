@@ -3,6 +3,7 @@ package com.ada.simpleeconomygamespringboot.unit.controller;
 import com.ada.simpleeconomygamespringboot.unit.dto.GetUnitResponse;
 import com.ada.simpleeconomygamespringboot.unit.dto.UpdateUnitRequest;
 import com.ada.simpleeconomygamespringboot.unit.entity.Unit;
+import com.ada.simpleeconomygamespringboot.unit.repository.UnitRepository;
 import com.ada.simpleeconomygamespringboot.unit.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,9 +48,10 @@ public class UserUnitController {
                                            @PathVariable("id") Long id, @PathVariable("uid") Long unitId) {
         Optional<Unit> unit = unitService.find(id, unitId);
         if (unit.isPresent()) {
-            if (unitService.canRecruit(request, id)) {
+            if (unitService.canRecruit(request, id, unit.get())) {
+                unit.get().setAmount(unit.get().getAmount() + request.getAmount());
+                unitService.update(unit.get());
                 UpdateUnitRequest.dtoToEntityUpdater().apply(unit.get(), request);
-                //unitService.update(unit.get());
                 return ResponseEntity.accepted().build();
             } else {
                 return ResponseEntity.notFound().build();

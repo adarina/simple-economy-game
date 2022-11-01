@@ -56,9 +56,11 @@ public class UserController {
             return ResponseEntity.notFound().build();
         } else {
             user = userService.create(user);
+
             Resource resourceMud = ResourceBuilder.aResource().defaultBuildMudEntity(user);
             Resource resourceStone = ResourceBuilder.aResource().defaultBuildStoneEntity(user);
             Resource resourceMeat = ResourceBuilder.aResource().defaultBuildMeatEntity(user);
+
             resourceService.create(resourceMud);
             resourceService.create(resourceStone);
             resourceService.create(resourceMeat);

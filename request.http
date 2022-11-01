@@ -121,8 +121,8 @@ PUT http://localhost:8080/api/users/1/units/1
 Content-Type: application/json
 
 {
-  "type": "GOBLIN",
-  "amount": -100
+  "type": "ORC",
+  "amount": -6
 }
 
 ###

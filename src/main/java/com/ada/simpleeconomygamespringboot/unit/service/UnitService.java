@@ -20,31 +20,32 @@ import java.util.Optional;
 @Service
 public class UnitService {
 
-    private final UnitRepository unitRepository;
+    private UnitRepository unitRepository;
 
-    private final BuildingRepository buildingRepository;
+    private ResourceRepository resourceRepository;
 
-    private final ResourceRepository resourceRepository;
+    private UnitProperties unitProperties;
 
-    private final UnitProperties unitProperties;
+    private ResourceService resourceService;
 
-    private final ResourceService resourceService;
-
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
 
     @Autowired
-    public UnitService(UnitRepository unitRepository, BuildingRepository buildingRepository,
-                       ResourceRepository resourceRepository, UnitProperties unitProperties,
-                       ResourceService resourceService, UserRepository userRepository) {
+    public UnitService(UnitRepository unitRepository, ResourceRepository resourceRepository,
+                       UnitProperties unitProperties, ResourceService resourceService,
+                       UserRepository userRepository) {
         this.unitRepository = unitRepository;
-        this.buildingRepository = buildingRepository;
         this.resourceRepository = resourceRepository;
         this.unitProperties = unitProperties;
         this.resourceService = resourceService;
-
         this.userRepository = userRepository;
     }
+
+    public UnitService() {
+
+    }
+
 
     @Transactional
     public Unit create(Unit unit) {
@@ -82,16 +83,6 @@ public class UnitService {
         unitRepository.save(unit);
     }
 
-    public void changeAmount(Unit unit, Long amountToAdd) {
-        if (unit.getAmount() + amountToAdd < 0) {
-            unit.setAmount(0L);
-        } else {
-            System.out.println(unit.getAmount() + amountToAdd);
-            unit.setAmount(unit.getAmount() + amountToAdd);
-        }
-        unitRepository.save(unit);
-    }
-
     public Optional<Unit> find(Long id) {
         return unitRepository.findById(id);
     }
@@ -100,45 +91,45 @@ public class UnitService {
         return unitRepository.findByUserId(id);
     }
 
-    public boolean canRecruit(UpdateUnitRequest unit, Long id) {
+    public boolean canRecruit(UpdateUnitRequest unit, Long id, Unit findUnit) {
 
         Resource resourceMud = resourceRepository.findByUserIdAndType(id,"MUD");
         Resource resourceStone = resourceRepository.findByUserIdAndType(id,"STONE");
 
-        Unit unitGoblin = unitRepository.findByUserIdAndType(id, "GOBLIN");
-        Unit unitOrc = unitRepository.findByUserIdAndType(id, "ORC");
-        Unit unitTroll = unitRepository.findByUserIdAndType(id, "TROLL");
+        if (unit.getAmount() + findUnit.getAmount() >= 0) {
+            if (unit.getType().equals("GOBLIN") && findUnit.getActive()
+                    && resourceMud.getAmount() >= unitProperties.getGoblinArcherMudCost()) {
+                resourceService.changeMudQuantity(id, (-unitProperties.getGoblinArcherMudCost()) * unit.getAmount());
 
-        if (unit.getType().equals("GOBLIN") && unitGoblin.getActive()
-                && resourceMud.getAmount() >= unitProperties.getGoblinArcherMudCost()) {
-            resourceService.changeMudQuantity(id, (-unitProperties.getGoblinArcherMudCost()) * unit.getAmount());
-            changeAmount(unitGoblin, unit.getAmount());
-            return true;
-        } else if (unit.getType().equals("ORC") && unitOrc.getActive()
-                && resourceStone.getAmount() >= unitProperties.getOrcWarriorStoneCost()) {
-            resourceService.changeStoneQuantity(id, (-unitProperties.getOrcWarriorStoneCost()) * unit.getAmount());
-            changeAmount(unitOrc, unit.getAmount());
-            return true;
-        } else if (unit.getType().equals("TROLL") && unitTroll.getActive()
-                && resourceMud.getAmount() >= unitProperties.getUglyTrollMudCost()
-                && resourceStone.getAmount() >= unitProperties.getUglyTrollStoneCost()) {
-            resourceService.changeMudQuantity(id, (-unitProperties.getUglyTrollMudCost()) * unit.getAmount());
-            resourceService.changeStoneQuantity(id, (-unitProperties.getUglyTrollStoneCost()) * unit.getAmount());
-            changeAmount(unitOrc, unit.getAmount());
-            return true;
+                return true;
+            } else if (unit.getType().equals("ORC") && findUnit.getActive()
+                    && resourceStone.getAmount() >= unitProperties.getOrcWarriorStoneCost()) {
+                resourceService.changeStoneQuantity(id, (-unitProperties.getOrcWarriorStoneCost()) * unit.getAmount());
+
+                return true;
+            } else if (unit.getType().equals("TROLL") && findUnit.getActive()
+                    && resourceMud.getAmount() >= unitProperties.getUglyTrollMudCost()
+                    && resourceStone.getAmount() >= unitProperties.getUglyTrollStoneCost()) {
+                resourceService.changeMudQuantity(id, (-unitProperties.getUglyTrollMudCost()) * unit.getAmount());
+                resourceService.changeStoneQuantity(id, (-unitProperties.getUglyTrollStoneCost()) * unit.getAmount());
+
+                return true;
+            }
         }
         return false;
     }
 
     @Transactional
-    public void update(Unit unit) {
-        unitRepository.save(unit);
+    public Unit update(Unit unit) {
+        return unitRepository.save(unit);
     }
+
     public List<Unit> findAllUnits() {
         return unitRepository.findAll();
     }
 
-    public Unit saveUnit(Unit unit) {
-        return unitRepository.save(unit);
+    public boolean existsByUserId(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.isPresent();
     }
 }

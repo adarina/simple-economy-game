@@ -18,4 +18,6 @@ public interface UnitRepository extends JpaRepository<Unit, Long> {
     List<Unit> findAllByUser(User user);
 
     List<Unit> findByUserId(Long userId);
+
+    boolean existsUnitByUserId(Long id);
 }
