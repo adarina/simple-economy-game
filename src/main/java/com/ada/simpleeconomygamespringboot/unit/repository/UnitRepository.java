@@ -11,13 +11,11 @@ import java.util.Optional;
 @Repository
 public interface UnitRepository extends JpaRepository<Unit, Long> {
 
-     Unit findByUserIdAndType(Long id, String type);
+    Unit findByUserIdAndType(Long id, String type);
 
     Optional<Unit> findByIdAndUser(Long id, User user);
 
     List<Unit> findAllByUser(User user);
 
     List<Unit> findByUserId(Long userId);
-
-    boolean existsUnitByUserId(Long id);
 }

@@ -90,14 +90,6 @@ public class UserUnitControllerTest {
     }
 
     @Test
-    public void whenUserNotFound_thenReturnsNotFound() throws Exception {
-        when(unitService.existsByUserId(1L)).thenReturn(false);
-
-        mvc.perform(get("/users/1/units"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     public void givenUserToGoblinArcherInUnit_whenUpdateUnit_thenReturnsAccepted() throws Exception {
 
         User testUser = UserBuilder

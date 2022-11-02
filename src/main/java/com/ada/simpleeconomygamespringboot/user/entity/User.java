@@ -2,13 +2,13 @@ package com.ada.simpleeconomygamespringboot.user.entity;
 
 import com.ada.simpleeconomygamespringboot.resource.entity.Resource;
 import com.ada.simpleeconomygamespringboot.unit.entity.Unit;
-import com.sun.istack.NotNull;
 import lombok.*;
 import com.ada.simpleeconomygamespringboot.building.entity.Building;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -26,13 +26,13 @@ public class User implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @javax.validation.constraints.NotNull
+    @NotNull
     private String username;
 
-    @javax.validation.constraints.NotNull
+    @NotNull
     private String password;
 
-    @javax.validation.constraints.NotNull
+    @NotNull
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)

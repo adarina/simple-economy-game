@@ -78,14 +78,6 @@ public class UserBuildingControllerTest {
     }
 
     @Test
-    public void givenNotFoundUser_whenGetBuildings_thenReturnsNotFound() throws Exception {
-        when(buildingService.existsByUserId(1L)).thenReturn(false);
-
-        mvc.perform(get("/users/1/buildings"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     public void givenUserAndBuilding_whenPostBuilding_thenReturnsOK() throws Exception {
 
         User testUser = UserBuilder

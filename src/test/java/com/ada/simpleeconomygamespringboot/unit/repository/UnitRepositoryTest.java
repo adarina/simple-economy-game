@@ -70,47 +70,6 @@ public class UnitRepositoryTest {
     }
 
     @Test
-    public void givenUser_whenExistsUnitByUserId_thenReturnsTrue() {
-
-        User testUser = UserBuilder
-                .anUser()
-                .withUsername("tester")
-                .withPassword("tester")
-                .withRole("USER")
-                .buildUserEntity();
-
-        Unit testUnit = UnitBuilder
-                .anUnit()
-                .defaultBuildGoblinArcherEntity(testUser);
-
-        testUser = userRepository.save(testUser);
-        unitRepository.save(testUnit);
-        boolean isExist = unitRepository.existsUnitByUserId(testUser.getId());
-        assertTrue(isExist);
-    }
-
-    @Test
-    public void givenUser_whenExistsUnitByNotExistingUserId_thenReturnsNullUnit() {
-
-        User testUser = UserBuilder
-                .anUser()
-                .withUsername("tester")
-                .withPassword("tester")
-                .withRole("USER")
-                .buildUserEntity();
-
-        testUser = userRepository.save(testUser);
-
-        Unit testUnit = UnitBuilder
-                .anUnit()
-                .defaultBuildGoblinArcherEntity(testUser);
-
-        unitRepository.save(testUnit);
-        boolean isExist = unitRepository.existsUnitByUserId(testUser.getId() + 1);
-        assertFalse(isExist);
-    }
-
-    @Test
     public void givenUser_whenExistsByUserId_thenReturnsFalse() {
         boolean isExist = unitRepository.existsById(1L);
         assertFalse(isExist);

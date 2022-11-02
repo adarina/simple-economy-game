@@ -83,12 +83,4 @@ public class UserResourceControllerTest {
                 .andExpect(jsonPath("$.resources[2].type").value("MEAT"))
                 .andExpect(jsonPath("$.resources[2].amount").value(1000000));
     }
-
-    @Test
-    public void whenUserNotFound_thenReturnsNotFound() throws Exception {
-        when(resourceService.existsByUserId(1L)).thenReturn(false);
-
-        mvc.perform(get("/users/1/resources"))
-                .andExpect(status().isNotFound());
-    }
 }

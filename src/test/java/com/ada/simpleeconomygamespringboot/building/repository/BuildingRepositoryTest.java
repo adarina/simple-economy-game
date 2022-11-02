@@ -64,52 +64,6 @@ public class BuildingRepositoryTest {
     }
 
     @Test
-    public void givenUser_whenExistsBuildingByUserId_thenReturnsTrue() {
-
-        User testUser = UserBuilder
-                .anUser()
-                .withUsername("tester")
-                .withPassword("tester")
-                .withRole("USER")
-                .buildUserEntity();
-
-        Building testBuilding = BuildingBuilder
-                .aBuilding()
-                .defaultBuildMudGatherersCottageEntity(testUser);
-
-        testUser = userRepository.save(testUser);
-        buildingRepository.save(testBuilding);
-        boolean isExist = buildingRepository.existsBuildingByUserIdAndType(testUser.getId(), testBuilding.getType());
-        assertTrue(isExist);
-    }
-
-    @Test
-    public void givenUser_whenExistsBuildingByNotExistingUserId_thenReturnsFalse() {
-        User testUser = UserBuilder
-                .anUser()
-                .withUsername("tester")
-                .withPassword("tester")
-                .withRole("USER")
-                .buildUserEntity();
-
-        testUser = userRepository.save(testUser);
-
-        Building testBuilding = BuildingBuilder
-                .aBuilding()
-                .defaultBuildMudGatherersCottageEntity(testUser);
-
-        buildingRepository.save(testBuilding);
-        boolean isExist = buildingRepository.existsBuildingByUserIdAndType(testUser.getId() + 1, testBuilding.getType());
-        assertFalse(isExist);
-    }
-
-    @Test
-    public void givenUser_whenExistsBuildingByUserId_thenReturnsFalse() {
-        boolean isExist = buildingRepository.existsBuildingByUserId(1L);
-        assertFalse(isExist);
-    }
-
-    @Test
     public void givenUser_whenFindByNotExistingUserIdAndType_thenReturnsNull() {
         Building findBuilding = buildingRepository.findByUserIdAndType(1L, "COTTAGE");
         assertNull(findBuilding);

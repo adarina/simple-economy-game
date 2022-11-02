@@ -12,14 +12,8 @@ import java.util.Optional;
 public interface BuildingRepository extends JpaRepository<Building, Long> {
 
     Building findByUserIdAndType(Long id, String type);
-
-    List<Building> findByUserId(Long id);
-
-    boolean existsBuildingByUserIdAndType(Long id, String type);
-
-    boolean existsBuildingByUserId(Long id);
-
     Optional<Building> findByIdAndUser(Long id, User user);
-
+    List<Building> findByUserId(Long id);
     List<Building> findAllByUser(User user);
+
 }

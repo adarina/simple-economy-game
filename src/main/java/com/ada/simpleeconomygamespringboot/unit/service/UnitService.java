@@ -20,15 +20,15 @@ import java.util.Optional;
 @Service
 public class UnitService {
 
-    private UnitRepository unitRepository;
+    private final UnitRepository unitRepository;
 
-    private ResourceRepository resourceRepository;
+    private final ResourceRepository resourceRepository;
 
-    private UnitProperties unitProperties;
+    private final UnitProperties unitProperties;
 
-    private ResourceService resourceService;
+    private final ResourceService resourceService;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
 
     @Autowired
@@ -40,55 +40,6 @@ public class UnitService {
         this.unitProperties = unitProperties;
         this.resourceService = resourceService;
         this.userRepository = userRepository;
-    }
-
-    public UnitService() {
-
-    }
-
-
-    @Transactional
-    public Unit create(Unit unit) {
-        return unitRepository.save(unit);
-    }
-
-    public List<Unit> findAll(User user) {
-        return unitRepository.findAllByUser(user);
-    }
-
-    public Optional<Unit> find(Long id, Long unitId) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return unitRepository.findByIdAndUser(unitId, user.get());
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public void changeGoblinArcherActivity(Long id, Boolean activity) {
-        Unit unit = unitRepository.findByUserIdAndType(id, "GOBLIN");
-        unit.setActive(activity);
-        unitRepository.save(unit);
-    }
-
-    public void changeOrcWarriorActivity(Long id, Boolean activity) {
-        Unit unit = unitRepository.findByUserIdAndType(id, "ORC");
-        unit.setActive(activity);
-        unitRepository.save(unit);
-    }
-
-    public void changeUglyTrollActivity(Long id, Boolean activity) {
-        Unit unit = unitRepository.findByUserIdAndType(id, "TROLL");
-        unit.setActive(activity);
-        unitRepository.save(unit);
-    }
-
-    public Optional<Unit> find(Long id) {
-        return unitRepository.findById(id);
-    }
-
-    public List<Unit> findUnitByUserId(Long id) {
-        return unitRepository.findByUserId(id);
     }
 
     public boolean canRecruit(UpdateUnitRequest unit, Long id, Unit findUnit) {
@@ -119,17 +70,49 @@ public class UnitService {
         return false;
     }
 
+    public void changeGoblinArcherActivity(Long id, Boolean activity) {
+        Unit unit = unitRepository.findByUserIdAndType(id, "GOBLIN");
+        unit.setActive(activity);
+        unitRepository.save(unit);
+    }
+
+    public void changeOrcWarriorActivity(Long id, Boolean activity) {
+        Unit unit = unitRepository.findByUserIdAndType(id, "ORC");
+        unit.setActive(activity);
+        unitRepository.save(unit);
+    }
+
+    public void changeUglyTrollActivity(Long id, Boolean activity) {
+        Unit unit = unitRepository.findByUserIdAndType(id, "TROLL");
+        unit.setActive(activity);
+        unitRepository.save(unit);
+    }
+
+    @Transactional
+    public Unit create(Unit unit) {
+        return unitRepository.save(unit);
+    }
+
+    public Optional<Unit> find(Long id, Long unitId) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return unitRepository.findByIdAndUser(unitId, user.get());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public List<Unit> findAll(User user) {
+        return unitRepository.findAllByUser(user);
+    }
+
+    public Optional<Unit> find(Long id) {
+        return unitRepository.findById(id);
+    }
+
     @Transactional
     public Unit update(Unit unit) {
         return unitRepository.save(unit);
     }
 
-    public List<Unit> findAllUnits() {
-        return unitRepository.findAll();
-    }
-
-    public boolean existsByUserId(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.isPresent();
-    }
 }

@@ -62,7 +62,7 @@ Content-Type: application/json
 DELETE http://localhost:8080/api/users/1
 ###
 
-POST http://localhost:8080/api/users/2/buildings
+POST http://localhost:8080/api/users/1/buildings
 Content-Type: application/json
 
 {

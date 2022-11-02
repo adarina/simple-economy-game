@@ -10,12 +10,9 @@ import java.util.List;
 @Repository
 public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
-    List<Resource> findByUserId(Long userId);
-
     Resource findByUserIdAndType(Long userId, String type);
-
+    List<Resource> findByUserId(Long userId);
     List<Resource> findAllByUser(User user);
-
-    boolean existsResourceByUserId(Long id);
+//    boolean existsResourceByUserId(Long id);
 
 }

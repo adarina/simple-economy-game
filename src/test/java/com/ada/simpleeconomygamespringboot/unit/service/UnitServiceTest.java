@@ -1,96 +1,42 @@
 package com.ada.simpleeconomygamespringboot.unit.service;
 
-import com.ada.simpleeconomygamespringboot.building.repository.BuildingRepository;
-import com.ada.simpleeconomygamespringboot.resource.repository.ResourceRepository;
-import com.ada.simpleeconomygamespringboot.resource.service.ResourceService;
 import com.ada.simpleeconomygamespringboot.unit.entity.Unit;
-import com.ada.simpleeconomygamespringboot.unit.properties.UnitProperties;
+import com.ada.simpleeconomygamespringboot.unit.entity.UnitBuilder;
 import com.ada.simpleeconomygamespringboot.unit.repository.UnitRepository;
 import com.ada.simpleeconomygamespringboot.user.entity.User;
 import com.ada.simpleeconomygamespringboot.user.entity.UserBuilder;
 import com.ada.simpleeconomygamespringboot.user.repository.UserRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@RunWith(MockitoJUnitRunner.class)
 public class UnitServiceTest {
 
-//    @TestConfiguration
-//    static class ServiceTestContextConfiguration {
-//
-//
-//
-//
-//        @Bean
-//        public UnitService unitService() {
-//            return new UnitService();
-//        }
-//    }
-
-    @MockBean
-    private UnitService unitService;
-
-    @MockBean
+    @Mock
     private UnitRepository unitRepository;
 
-    @MockBean
-    private ResourceService resourceService;
+    @InjectMocks
+    private UnitService unitService;
 
-    @MockBean
-    private UnitProperties unitProperties;
-
-    @MockBean
-    private BuildingRepository buildingRepository;
-
-    @MockBean
-    private ResourceRepository resourceRepository;
-
-    @MockBean
+    @Mock
     private UserRepository userRepository;
 
-
-
-
-
     @Test
-    void givenNotExistedUserId_whenExistByUserID_thenFalse() {
-        when(unitRepository.findByUserIdAndType(1L, "COTTAGE")).thenReturn(Unit.builder().build());
-
-        Optional<Unit> unit = unitService.find(1L);
-
-        assertNull( unit);
-    }
-
-
-
-    @Test
-    void givenExistedUserId_whenExistByUserID_thenTrue() throws NoSuchFieldException, IllegalAccessException {
-
+    public void givenExistedUserId_whenFind_thenReturnsUnitAndProperValues() throws NoSuchFieldException, IllegalAccessException {
         User testUser = UserBuilder
                 .anUser()
                 .withUsername("tester")
@@ -102,16 +48,135 @@ public class UnitServiceTest {
         privateIdField.setAccessible(true);
         privateIdField.set(testUser, 1L);
 
+        Unit testUnitGoblinArcher = UnitBuilder
+                .anUnit()
+                .defaultBuildGoblinArcherEntity(testUser);
 
-        UserRepository userRepository = mock(UserRepository.class);
-        UnitService lol2 = mock(UnitService.class);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        privateIdField = Unit.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUnitGoblinArcher, 1L);
 
-       Optional<User> lol = userRepository.findById(1L);
-        System.out.println(lol);
-        boolean isExisted = lol2.existsByUserId(1L);
-        System.out.println(isExisted);
-        assertTrue(isExisted);
+        when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(testUser));
+        when(unitRepository.findByIdAndUser(1L, testUser)).thenReturn(Optional.ofNullable(testUnitGoblinArcher));
+
+        Optional<Unit> responseUnit = unitService.find(1L, 1L);
+
+        assertTrue(responseUnit.isPresent());
+        assert testUnitGoblinArcher != null;
+        assertEquals(responseUnit.get().getType(), testUnitGoblinArcher.getType());
+        assertEquals(responseUnit.get().getActive(),testUnitGoblinArcher.getActive());
+        assertEquals(responseUnit.get().getUser(), testUnitGoblinArcher.getUser());
+        assertEquals(responseUnit.get().getAmount(), testUnitGoblinArcher.getAmount());
     }
 
+    @Test
+    public void givenNotExistedUserId_whenFind_thenReturnsFalse() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        Optional<Unit> responseUnit = unitService.find(1L, 1L);
+        assertFalse(responseUnit.isPresent());
+    }
+
+    @Test
+    public void givenExistedUserIdAndUnitGoblinArcher_whenChangeGoblinArcherActivity_thenReturnsUnitAndProperChange() throws NoSuchFieldException, IllegalAccessException {
+        User testUser = UserBuilder
+                .anUser()
+                .withUsername("tester")
+                .withPassword("tester")
+                .withRole("USER")
+                .buildUserEntity();
+
+        Field privateIdField = User.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUser, 1L);
+
+        Unit testUnitGoblinArcher = UnitBuilder
+                .anUnit()
+                .defaultBuildGoblinArcherEntity(testUser);
+
+        privateIdField = Unit.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUnitGoblinArcher, 1L);
+
+        when(unitRepository.findByUserIdAndType(testUser.getId(), testUnitGoblinArcher.getType())).thenReturn(testUnitGoblinArcher);
+        when(unitRepository.save(any())).thenReturn(testUnitGoblinArcher);
+
+        unitService.changeGoblinArcherActivity(1L, true);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(unitRepository.findByIdAndUser(1L, testUser)).thenReturn(Optional.of(testUnitGoblinArcher));
+
+        Optional<Unit> responseUnit = unitService.find(testUser.getId(), testUnitGoblinArcher.getId());
+
+        assertTrue(responseUnit.isPresent());
+        assertEquals(responseUnit.get().getId(), testUnitGoblinArcher.getId());
+        assertEquals(responseUnit.get().getType(), testUnitGoblinArcher.getType());
+        assertEquals(responseUnit.get().getActive(),testUnitGoblinArcher.getActive());
+        assertEquals(responseUnit.get().getUser(), testUnitGoblinArcher.getUser());
+    }
+
+    @Test
+    public void givenExistedUserId_whenCreate_thenReturnsThat() {
+
+        User testUser = UserBuilder
+                .anUser()
+                .withUsername("tester")
+                .withPassword("tester")
+                .withRole("USER")
+                .buildUserEntity();
+
+        Unit testUnitGoblinArcher = UnitBuilder
+                .anUnit()
+                .defaultBuildGoblinArcherEntity(testUser);
+
+        when(unitRepository.save(any(Unit.class))).thenReturn(testUnitGoblinArcher);
+        Unit createdUnit = unitService.create(testUnitGoblinArcher);
+
+        assertThat(createdUnit.getType()).isSameAs(testUnitGoblinArcher.getType());
+    }
+
+    @Test
+    public void givenNotExistedUser_whenCreate_thenReturnsNull() {
+
+        Unit testUnitGoblinArcher = UnitBuilder
+                .anUnit()
+                .defaultBuildGoblinArcherEntity(null);
+
+        when(unitRepository.save(any(Unit.class))).thenReturn(null);
+        Unit createdUnit = unitService.create(testUnitGoblinArcher);
+        assertNull(createdUnit);
+    }
+
+    @Test
+    public void givenNotExistedUser_whenFindAll_thenReturnsNull() {
+        when(unitRepository.findAllByUser(null)).thenReturn(null);
+        List<Unit> responseUnit = unitService.findAll(null);
+        assertNull(responseUnit);
+    }
+
+    @Test
+    public void givenExistedUser_whenFindAll_thenReturnsNotNull() throws NoSuchFieldException, IllegalAccessException {
+
+        User testUser = UserBuilder
+                .anUser()
+                .withUsername("tester")
+                .withPassword("tester")
+                .withRole("USER")
+                .buildUserEntity();
+
+        Unit testUnitGoblinArcher = UnitBuilder
+                .anUnit()
+                .defaultBuildGoblinArcherEntity(testUser);
+
+        Field userIdField = User.class.getDeclaredField("id");
+        userIdField.setAccessible(true);
+        userIdField.set(testUser, 1L);
+
+        List<Unit> testUnits = new ArrayList<>();
+        testUnits.add(testUnitGoblinArcher);
+        testUser.setUnits(testUnits);
+
+        when(unitRepository.findAllByUser(testUser)).thenReturn(testUnits);
+        List<Unit> responseUnit = unitService.findAll(testUser);
+        assertNotNull(responseUnit);
+    }
 }

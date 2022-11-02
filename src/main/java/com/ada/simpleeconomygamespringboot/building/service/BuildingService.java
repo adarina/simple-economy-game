@@ -20,21 +20,18 @@ import java.util.Optional;
 @Service
 public class BuildingService {
 
-    private  BuildingRepository buildingRepository;
+    private final BuildingRepository buildingRepository;
 
-    private  BuildingProperties buildingProperties;
+    private final BuildingProperties buildingProperties;
 
-    private  UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private  ResourceRepository resourceRepository;
+    private final ResourceRepository resourceRepository;
 
-    private  ResourceService resourceService;
+    private final ResourceService resourceService;
 
-    private  UnitService unitService;
+    private final UnitService unitService;
 
-    public BuildingService() {
-
-    }
     @Autowired
     public BuildingService(BuildingRepository buildingRepository, BuildingProperties buildingProperties,
                            UserRepository userRepository, ResourceRepository resourceRepository,
@@ -125,10 +122,6 @@ public class BuildingService {
         return buildingRepository.save(building);
     }
 
-    public List<Building> findAll(User user) {
-        return buildingRepository.findAllByUser(user);
-    }
-
     public Optional<Building> find(Long id, Long buildingId) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
@@ -138,12 +131,8 @@ public class BuildingService {
         }
     }
 
-    public List<Building> findAllBuildings() {
-        return buildingRepository.findAll();
+    public List<Building> findAll(User user) {
+        return buildingRepository.findAllByUser(user);
     }
 
-    public boolean existsByUserId(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.isPresent();
-    }
 }

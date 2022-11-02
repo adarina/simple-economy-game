@@ -44,15 +44,6 @@ public class ResourceService {
         resourceRepository.save(resource);
     }
 
-    public List<Resource> findResourceByUserId(Long userId) {
-        return resourceRepository.findByUserId(userId);
-    }
-
-    public boolean existsByUserId(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.isPresent();
-    }
-
     @Transactional
     public Resource create(Resource resource) {
         return resourceRepository.save(resource);
