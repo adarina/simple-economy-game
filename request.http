@@ -39,6 +39,24 @@ Content-Type: application/json
   "role": "USER"
 }
 ###
+
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "username": "marta",
+  "password": "12"
+}
+
+###
+
+GET http://localhost:8080/api/users/logged
+
+###
+
+GET http://localhost:8080/api/users/logout
+
+###
 POST http://localhost:8080/api/users
 Content-Type: application/json
 

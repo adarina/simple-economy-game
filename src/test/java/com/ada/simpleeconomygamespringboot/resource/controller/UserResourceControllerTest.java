@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -51,6 +52,9 @@ public class UserResourceControllerTest {
         userIdField.setAccessible(true);
         userIdField.set(testUser, 1L);
 
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
+
         Resource testResourceMud = ResourceBuilder
                 .aResource()
                 .defaultBuildMudEntity(testUser);
@@ -73,7 +77,8 @@ public class UserResourceControllerTest {
         when(resourceService.findAll(testUser)).thenReturn(testResources);
 
         mvc.perform(get("/api/users/1/resources")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(mockSession))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resources").isNotEmpty())
                 .andExpect(jsonPath("$.resources[0].type").value("MUD"))

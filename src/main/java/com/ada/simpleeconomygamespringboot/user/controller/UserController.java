@@ -7,6 +7,7 @@ import com.ada.simpleeconomygamespringboot.unit.entity.UnitBuilder;
 import com.ada.simpleeconomygamespringboot.unit.service.UnitService;
 import com.ada.simpleeconomygamespringboot.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,6 +17,7 @@ import com.ada.simpleeconomygamespringboot.user.dto.GetUserResponse;
 import com.ada.simpleeconomygamespringboot.user.dto.GetUsersResponse;
 import com.ada.simpleeconomygamespringboot.user.entity.User;
 
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @RestController
@@ -48,44 +50,84 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequest request, UriComponentsBuilder builder) {
-        User user = CreateUserRequest
-                .dtoToEntityMapper()
-                .apply(request);
-        if (userService.find(user.getUsername()).isPresent()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequest request, UriComponentsBuilder builder, HttpSession session) {
+        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
+        if (loggedInUser.isEmpty()) {
+            User user = CreateUserRequest
+                    .dtoToEntityMapper()
+                    .apply(request);
+            if (userService.find(user.getUsername()).isPresent()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                user = userService.create(user);
+
+                Resource resourceMud = ResourceBuilder.aResource().defaultBuildMudEntity(user);
+                Resource resourceStone = ResourceBuilder.aResource().defaultBuildStoneEntity(user);
+                Resource resourceMeat = ResourceBuilder.aResource().defaultBuildMeatEntity(user);
+
+                resourceService.create(resourceMud);
+                resourceService.create(resourceStone);
+                resourceService.create(resourceMeat);
+
+                Unit unitGoblin = UnitBuilder.anUnit().defaultBuildGoblinArcherEntity(user);
+                Unit unitOrc = UnitBuilder.anUnit().defaultBuildOrcWarriorEntity(user);
+                Unit unitTroll = UnitBuilder.anUnit().defaultBuildUglyTrollEntity(user);
+
+                unitService.create(unitGoblin);
+                unitService.create(unitOrc);
+                unitService.create(unitTroll);
+
+                return ResponseEntity.created(builder.pathSegment("api", "users", "{username}")
+                        .buildAndExpand(user.getUsername()).toUri()).build();
+            }
         } else {
-            user = userService.create(user);
-
-            Resource resourceMud = ResourceBuilder.aResource().defaultBuildMudEntity(user);
-            Resource resourceStone = ResourceBuilder.aResource().defaultBuildStoneEntity(user);
-            Resource resourceMeat = ResourceBuilder.aResource().defaultBuildMeatEntity(user);
-
-            resourceService.create(resourceMud);
-            resourceService.create(resourceStone);
-            resourceService.create(resourceMeat);
-
-            Unit unitGoblin = UnitBuilder.anUnit().defaultBuildGoblinArcherEntity(user);
-            Unit unitOrc = UnitBuilder.anUnit().defaultBuildOrcWarriorEntity(user);
-            Unit unitTroll = UnitBuilder.anUnit().defaultBuildUglyTrollEntity(user);
-
-            unitService.create(unitGoblin);
-            unitService.create(unitOrc);
-            unitService.create(unitTroll);
-
-            return ResponseEntity.created(builder.pathSegment("api", "users", "{username}")
-                    .buildAndExpand(user.getUsername()).toUri()).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
-        Optional<User> user = userService.find(id);
-        if (user.isPresent()) {
-            userService.delete(user.get().getId());
-            return ResponseEntity.accepted().build();
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id, HttpSession session) {
+        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
+        if (loggedInUser.isPresent() && loggedInUser.get().getId().equals(id)) {
+            Optional<User> user = userService.find(id);
+            if (user.isPresent()) {
+                userService.delete(user.get().getId());
+                session.removeAttribute("user");
+                session.invalidate();
+                return ResponseEntity.accepted().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody User user, HttpSession session) {
+        User existingUser = userService.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        if (existingUser != null) {
+            session.setAttribute("user", existingUser);
+            return ResponseEntity.ok("User logged in successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @GetMapping("/logged")
+    public ResponseEntity<String> loggedUser(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            return ResponseEntity.ok("Welcome, " + user.getUsername());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logoutUser(HttpSession session) {
+        session.removeAttribute("user");
+        session.invalidate();
+        return ResponseEntity.ok("User logged out successfully");
     }
 }

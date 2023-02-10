@@ -16,8 +16,6 @@ import java.util.function.Function;
 @EqualsAndHashCode
 public class CreateUserRequest {
 
-    //private Long id;
-
     private String username;
 
     private String password;
@@ -28,7 +26,6 @@ public class CreateUserRequest {
 
     public static Function<CreateUserRequest, User> dtoToEntityMapper() {
         return request -> User.builder()
-                //.id(request.getId())
                 .username(request.getUsername())
                 .password(request.getPassword())
                 .role(request.getRole())

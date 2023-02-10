@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -52,6 +53,13 @@ public class UserBuildingControllerTest {
                 .withRole("USER")
                 .buildUserEntity();
 
+        Field userIdField = User.class.getDeclaredField("id");
+        userIdField.setAccessible(true);
+        userIdField.set(testUser, 1L);
+
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
+
         Building testBuildingMudGatherersCottage = BuildingBuilder
                 .aBuilding()
                 .defaultBuildMudGatherersCottageEntity(testUser);
@@ -65,12 +73,12 @@ public class UserBuildingControllerTest {
         testBuildings.add(testBuildingGoblinsCavern);
         testUser.setBuildings(testBuildings);
 
-
         when(userService.find(1L)).thenReturn(Optional.of(testUser));
         when(buildingService.findAll(testUser)).thenReturn(testBuildings);
 
         mvc.perform(get("/api/users/1/buildings")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(mockSession))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.buildings").isNotEmpty())
                 .andExpect(jsonPath("$.buildings[0].type").value(testBuildings.get(0).getType()))
@@ -91,6 +99,9 @@ public class UserBuildingControllerTest {
         privateIdField.setAccessible(true);
         privateIdField.set(testUser, 1L);
 
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
+
         Building testBuildingMudGatherersCottage = BuildingBuilder
                 .aBuilding()
                 .defaultBuildMudGatherersCottageEntity(testUser);
@@ -105,13 +116,28 @@ public class UserBuildingControllerTest {
 
         mvc.perform(post("/api/users/1/buildings")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .session(mockSession)
                         .content(objectMapper.writeValueAsString(testBuildingMudGatherersCottage))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
     @Test
-    public void givenNoExistedUserId_whenPostBuilding_thenReturnsNotFound() throws  Exception{
+    public void givenNoExistedUserId_whenPostBuilding_thenReturnsNotFound() throws  Exception {
+
+        User testUser = UserBuilder
+                .anUser()
+                .withUsername("tester")
+                .withPassword("tester")
+                .withRole("USER")
+                .buildUserEntity();
+
+        Field privateIdField = User.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUser, 1L);
+
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
 
         Building testBuildingMudGatherersCottage = BuildingBuilder
                 .aBuilding()
@@ -121,7 +147,8 @@ public class UserBuildingControllerTest {
 
         mvc.perform(post("/api/users/2/buildings")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testBuildingMudGatherersCottage))
+                        .session(mockSession)
+                        .content(objectMapper.writeValueAsString(testBuildingMudGatherersCottage))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -135,6 +162,13 @@ public class UserBuildingControllerTest {
                 .withPassword("tester")
                 .withRole("USER")
                 .buildUserEntity();
+
+        Field privateIdField = User.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUser, 1L);
+
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
 
         Building testBuildingMudGatherersCottage = BuildingBuilder
                 .aBuilding()
@@ -150,7 +184,8 @@ public class UserBuildingControllerTest {
 
         assert testBuildingMudGatherersCottage != null;
         mvc.perform(get("/api/users/1/buildings/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(mockSession))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.type").isNotEmpty())
                 .andExpect(jsonPath("$.type").value(testBuildingMudGatherersCottage.getType()));
@@ -158,8 +193,24 @@ public class UserBuildingControllerTest {
 
     @Test
     public void givenWrongRequest_whenGetBuilding_thenReturnsNotFound() throws Exception {
+
+        User testUser = UserBuilder
+                .anUser()
+                .withUsername("tester")
+                .withPassword("tester")
+                .withRole("USER")
+                .buildUserEntity();
+
+        Field privateIdField = User.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUser, 1L);
+
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
+
         mvc.perform(get("/api/users/1/buildings/3")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                .session(mockSession))
                 .andExpect(status().isNotFound());
     }
 }

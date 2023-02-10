@@ -1,5 +1,6 @@
 package com.ada.simpleeconomygamespringboot.unit.controller;
 
+import com.ada.simpleeconomygamespringboot.unit.dto.GetUnitsResponse;
 import com.ada.simpleeconomygamespringboot.unit.entity.Unit;
 import com.ada.simpleeconomygamespringboot.unit.entity.UnitBuilder;
 import com.ada.simpleeconomygamespringboot.unit.repository.UnitRepository;
@@ -8,20 +9,30 @@ import com.ada.simpleeconomygamespringboot.user.entity.User;
 import com.ada.simpleeconomygamespringboot.user.entity.UserBuilder;
 import com.ada.simpleeconomygamespringboot.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -57,6 +68,13 @@ public class UserUnitControllerTest {
                 .withRole("USER")
                 .buildUserEntity();
 
+        Field privateIdField = User.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUser, 1L);
+
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
+
         Unit testUnitGoblinArcher = UnitBuilder
                 .anUnit()
                 .defaultBuildGoblinArcherEntity(testUser);
@@ -81,13 +99,15 @@ public class UserUnitControllerTest {
         when(unitService.findAll(testUser)).thenReturn(testUnits);
 
         mvc.perform(get("/api/users/1/units")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(mockSession))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.units").isNotEmpty())
                 .andExpect(jsonPath("$.units[0].type").value("GOBLIN"))
                 .andExpect(jsonPath("$.units[1].type").value("TROLL"))
                 .andExpect(jsonPath("$.units[2].type").value("ORC"));
     }
+
 
     @Test
     public void givenUserToGoblinArcherInUnit_whenUpdateUnit_thenReturnsAccepted() throws Exception {
@@ -102,6 +122,9 @@ public class UserUnitControllerTest {
         Field privateIdField = User.class.getDeclaredField("id");
         privateIdField.setAccessible(true);
         privateIdField.set(testUser, 1L);
+
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
 
         Unit testUnitGoblinArcher = UnitBuilder
                 .anUnit()
@@ -118,6 +141,7 @@ public class UserUnitControllerTest {
         mvc.perform(put("/api/users/1/units/1")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .session(mockSession)
                         .content(objectMapper.writeValueAsString(testUnitGoblinArcher)))
                 .andExpect(status().isAccepted());
     }
@@ -132,6 +156,13 @@ public class UserUnitControllerTest {
                 .withRole("USER")
                 .buildUserEntity();
 
+        Field privateIdField = User.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUser, 1L);
+
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
+
         Unit testUnitGoblinArcher = UnitBuilder
                 .anUnit()
                 .defaultBuildGoblinArcherEntity(testUser);
@@ -145,7 +176,8 @@ public class UserUnitControllerTest {
 
         assert testUnitGoblinArcher != null;
         mvc.perform(get("/api/users/1/units/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(mockSession))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.type").isNotEmpty())
                 .andExpect(jsonPath("$.type").value(testUnitGoblinArcher.getType()));
@@ -153,8 +185,24 @@ public class UserUnitControllerTest {
 
     @Test
     public void givenWrongRequest_whenGetUnit_thenReturnsNotFound() throws Exception {
+
+        User testUser = UserBuilder
+                .anUser()
+                .withUsername("tester")
+                .withPassword("tester")
+                .withRole("USER")
+                .buildUserEntity();
+
+        Field privateIdField = User.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUser, 1L);
+
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
+
         mvc.perform(get("/api/users/1/units/6")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(mockSession))
                 .andExpect(status().isNotFound());
     }
 }
