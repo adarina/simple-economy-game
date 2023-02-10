@@ -82,12 +82,20 @@ public class UserControllerTest {
                 .withRole("ADMIN")
                 .buildUserEntity();
 
+        Field privateIdField = User.class.getDeclaredField("id");
+        privateIdField.setAccessible(true);
+        privateIdField.set(testUser, 1L);
+
+        MockHttpSession mockSession = new MockHttpSession();
+        mockSession.setAttribute("user", testUser);
+
         List<User> userList = new ArrayList<>();
         userList.add(testUser);
 
         when(userService.findAll()).thenReturn(userList);
         mvc.perform(get("/api/users")
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .session(mockSession))
                 .andDo(print())
                 .andExpect(jsonPath("$.users").exists())
                 .andExpect(jsonPath("$.users[*].username").value("tester"))

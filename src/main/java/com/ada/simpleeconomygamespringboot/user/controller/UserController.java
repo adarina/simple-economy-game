@@ -38,8 +38,13 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<GetUsersResponse> getUsers() {
-        return ResponseEntity.ok(GetUsersResponse.entityToDtoMapper().apply(userService.findAll()));
+    public ResponseEntity<GetUsersResponse> getUsers(HttpSession session) {
+        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
+        if (loggedInUser.isPresent() && loggedInUser.get().getRole().equals("ADMIN")) {
+            return ResponseEntity.ok(GetUsersResponse.entityToDtoMapper().apply(userService.findAll()));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping("{id}")
@@ -88,7 +93,7 @@ public class UserController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id, HttpSession session) {
         Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isPresent() && loggedInUser.get().getId().equals(id)) {
+        if (loggedInUser.isPresent() && (loggedInUser.get().getId().equals(id) || loggedInUser.get().getRole().equals("ADMIN"))) {
             Optional<User> user = userService.find(id);
             if (user.isPresent()) {
                 userService.delete(user.get().getId());
