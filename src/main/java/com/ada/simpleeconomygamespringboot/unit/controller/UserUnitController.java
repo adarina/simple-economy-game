@@ -31,48 +31,48 @@ public class UserUnitController {
     }
 
     @GetMapping
-    public ResponseEntity<GetUnitsResponse> getUnits(@PathVariable("id") Long id, HttpSession session) {
-        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isEmpty() || !loggedInUser.get().getId().equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<GetUnitsResponse> getUnits(@PathVariable("id") Long id, @RequestHeader("Session-Token") String sessionToken) {
+        User existingUser = userService.findBySessionToken(sessionToken);
+        if (existingUser.getId().equals(id)) {
+            Optional<User> user = userService.find(id);
+            return user.map(value -> ResponseEntity.ok(GetUnitsResponse.entityToDtoMapper().apply(unitService.findAll(value))))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        Optional<User> user = userService.find(id);
-        return user.map(value -> ResponseEntity.ok(GetUnitsResponse.entityToDtoMapper().apply(unitService.findAll(value))))
-                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("{uid}")
-    public ResponseEntity<GetUnitResponse> getUnit(@PathVariable("id") Long id, @PathVariable("uid") Long unitId, HttpSession session) {
-        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isEmpty() || !loggedInUser.get().getId().equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<GetUnitResponse> getUnit(@PathVariable("id") Long id, @PathVariable("uid") Long unitId, @RequestHeader("Session-Token") String sessionToken) {
+        User existingUser = userService.findBySessionToken(sessionToken);
+        if (existingUser.getId().equals(id)) {
+            return unitService.find(id, unitId)
+                    .map(value -> ResponseEntity.ok(GetUnitResponse.entityToDtoMapper().apply(value)))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        return unitService.find(id, unitId)
-                .map(value -> ResponseEntity.ok(GetUnitResponse.entityToDtoMapper().apply(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("{uid}")
     public ResponseEntity<Void> updateUnit(@RequestBody UpdateUnitRequest request,
-                                           @PathVariable("id") Long id, @PathVariable("uid") Long unitId, HttpSession session) {
-        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isEmpty() || !loggedInUser.get().getId().equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        Optional<Unit> unit = unitService.find(id, unitId);
-        if (unit.isPresent()) {
-            if (unitService.canRecruit(request, id, unit.get())) {
-                unit.get().setAmount(unit.get().getAmount() + request.getAmount());
-                unitService.update(unit.get());
-                return ResponseEntity.accepted().build();
+                                           @PathVariable("id") Long id, @PathVariable("uid") Long unitId, @RequestHeader("Session-Token") String sessionToken) {
+        User existingUser = userService.findBySessionToken(sessionToken);
+        if (existingUser.getId().equals(id)) {
+            Optional<Unit> unit = unitService.find(id, unitId);
+            if (unit.isPresent()) {
+                if (unitService.canRecruit(request, id, unit.get())) {
+                    unit.get().setAmount(unit.get().getAmount() + request.getAmount());
+                    unitService.update(unit.get());
+                    return ResponseEntity.accepted().build();
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
             } else {
                 return ResponseEntity.notFound().build();
             }
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }

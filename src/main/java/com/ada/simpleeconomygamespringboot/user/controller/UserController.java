@@ -18,6 +18,9 @@ import com.ada.simpleeconomygamespringboot.user.dto.GetUsersResponse;
 import com.ada.simpleeconomygamespringboot.user.entity.User;
 
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -38,10 +41,10 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<GetUsersResponse> getUsers(HttpSession session) {
-        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isPresent() && loggedInUser.get().getRole().equals("ADMIN")) {
-            return ResponseEntity.ok(GetUsersResponse.entityToDtoMapper().apply(userService.findAll()));
+    public ResponseEntity<GetUsersResponse> getUsers(@RequestHeader("Session-Token") String sessionToken) {
+        User existingUser = userService.findBySessionToken(sessionToken);
+        if (existingUser != null &&  existingUser.getRole().equals("ADMIN")) {
+        return ResponseEntity.ok(GetUsersResponse.entityToDtoMapper().apply(userService.findAll()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -49,56 +52,50 @@ public class UserController {
 
     @GetMapping("{id}")
     public ResponseEntity<GetUserResponse> getUser(@PathVariable("id") Long id) {
-        return  userService.find(id)
+        return userService.find(id)
                 .map(value -> ResponseEntity.ok(GetUserResponse.entityToDtoMapper().apply(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequest request, UriComponentsBuilder builder, HttpSession session) {
-        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isEmpty()) {
-            User user = CreateUserRequest
-                    .dtoToEntityMapper()
-                    .apply(request);
-            if (userService.find(user.getUsername()).isPresent()) {
-                return ResponseEntity.notFound().build();
-            } else {
-                user = userService.create(user);
+    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequest request, UriComponentsBuilder builder) {
 
-                Resource resourceMud = ResourceBuilder.aResource().defaultBuildMudEntity(user);
-                Resource resourceStone = ResourceBuilder.aResource().defaultBuildStoneEntity(user);
-                Resource resourceMeat = ResourceBuilder.aResource().defaultBuildMeatEntity(user);
-
-                resourceService.create(resourceMud);
-                resourceService.create(resourceStone);
-                resourceService.create(resourceMeat);
-
-                Unit unitGoblin = UnitBuilder.anUnit().defaultBuildGoblinArcherEntity(user);
-                Unit unitOrc = UnitBuilder.anUnit().defaultBuildOrcWarriorEntity(user);
-                Unit unitTroll = UnitBuilder.anUnit().defaultBuildUglyTrollEntity(user);
-
-                unitService.create(unitGoblin);
-                unitService.create(unitOrc);
-                unitService.create(unitTroll);
-
-                return ResponseEntity.created(builder.pathSegment("api", "users", "{username}")
-                        .buildAndExpand(user.getUsername()).toUri()).build();
-            }
+        User user = CreateUserRequest
+                .dtoToEntityMapper()
+                .apply(request);
+        if (userService.find(user.getUsername()).isPresent()) {
+            return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            user = userService.create(user);
+
+            Resource resourceMud = ResourceBuilder.aResource().defaultBuildMudEntity(user);
+            Resource resourceStone = ResourceBuilder.aResource().defaultBuildStoneEntity(user);
+            Resource resourceMeat = ResourceBuilder.aResource().defaultBuildMeatEntity(user);
+
+            resourceService.create(resourceMud);
+            resourceService.create(resourceStone);
+            resourceService.create(resourceMeat);
+
+            Unit unitGoblin = UnitBuilder.anUnit().defaultBuildGoblinArcherEntity(user);
+            Unit unitOrc = UnitBuilder.anUnit().defaultBuildOrcWarriorEntity(user);
+            Unit unitTroll = UnitBuilder.anUnit().defaultBuildUglyTrollEntity(user);
+
+            unitService.create(unitGoblin);
+            unitService.create(unitOrc);
+            unitService.create(unitTroll);
+
+            return ResponseEntity.created(builder.pathSegment("api", "users", "{username}")
+                    .buildAndExpand(user.getUsername()).toUri()).build();
         }
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id, HttpSession session) {
-        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isPresent() && (loggedInUser.get().getId().equals(id) || loggedInUser.get().getRole().equals("ADMIN"))) {
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id, @RequestHeader("Session-Token") String sessionToken) {
+        User existingUser = userService.findBySessionToken(sessionToken);
+        if (existingUser != null && (existingUser.getId().equals(id) || existingUser.getRole().equals("ADMIN"))) {
             Optional<User> user = userService.find(id);
             if (user.isPresent()) {
                 userService.delete(user.get().getId());
-                session.removeAttribute("user");
-                session.invalidate();
                 return ResponseEntity.accepted().build();
             } else {
                 return ResponseEntity.notFound().build();
@@ -109,30 +106,40 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user, HttpSession session) {
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody User user, HttpSession session) {
         User existingUser = userService.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         if (existingUser != null) {
-            session.setAttribute("user", existingUser);
-            return ResponseEntity.ok("User logged in successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
-
-    @GetMapping("/logged")
-    public ResponseEntity<String> loggedUser(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            return ResponseEntity.ok("Welcome, " + user.getUsername());
+            existingUser.setSessionToken(session.getId());
+            userService.save(existingUser);
+            Map<String, String> response = new HashMap<>();
+            response.put("token", session.getId());
+            response.put("role", existingUser.getRole());
+            response.put("id", existingUser.getId().toString());
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<String> logoutUser(HttpSession session) {
-        session.removeAttribute("user");
-        session.invalidate();
-        return ResponseEntity.ok("User logged out successfully");
+    public ResponseEntity<Void> logoutUser(@RequestHeader("Session-Token") String sessionToken) {
+        User user = userService.findBySessionToken(sessionToken);
+        if (user != null) {
+            user.setSessionToken(null);
+            userService.save(user);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<Void> checkSession(@RequestHeader("Session-Token") String sessionToken) {
+        User user = userService.findBySessionToken(sessionToken);
+        if (user != null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            return ResponseEntity.ok().build();
+        }
     }
 }

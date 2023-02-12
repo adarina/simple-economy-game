@@ -10,7 +10,7 @@ GET http://localhost:8080/api/users/1/resources
 
 ###
 
-GET http://localhost:8080/api/users/2/resources
+GET http://localhost:8080/api/users/5/resources
 
 ###
 
@@ -38,6 +38,19 @@ Content-Type: application/json
   "password": "12",
   "role": "USER"
 }
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "a",
+  "password": "a",
+  "role": "USER"
+}
+###
+GET http://localhost:8080/api/users/1/resources
+
 ###
 
 POST http://localhost:8080/api/users/login
@@ -54,13 +67,23 @@ POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
+  "username": "a",
+  "password": "a"
+}
+
+###
+
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
   "username": "1",
   "password": "1"
 }
 
 ###
 
-GET http://localhost:8080/api/users/logged
+GET http://localhost:8080/api/users/check
 
 ###
 
@@ -71,8 +94,8 @@ POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-"username": "1",
-"password": "1",
+"username": "2",
+"password": "2",
 "role": "ADMIN"
 }
 

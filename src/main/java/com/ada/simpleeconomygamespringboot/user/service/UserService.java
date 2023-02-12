@@ -41,7 +41,16 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    @Transactional
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
     public User findByUsernameAndPassword(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, password);
+    }
+
+    public User findBySessionToken(String sessionToken) {
+        return userRepository.findBySessionToken(sessionToken);
     }
 }

@@ -31,9 +31,9 @@ public class UserBuildingController {
     }
 
     @GetMapping
-    public ResponseEntity<GetBuildingsResponse> getBuildings(@PathVariable("id") Long id, HttpSession session) {
-        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isPresent()) {
+    public ResponseEntity<GetBuildingsResponse> getBuildings(@PathVariable("id") Long id, @RequestHeader("Session-Token") String sessionToken) {
+        User existingUser = userService.findBySessionToken(sessionToken);
+        if (existingUser != null) {
             Optional<User> user = userService.find(id);
             return user.map(value -> ResponseEntity.ok(GetBuildingsResponse.entityToDtoMapper().apply(buildingService.findAll(value))))
                     .orElseGet(() -> ResponseEntity.notFound().build());
@@ -44,9 +44,9 @@ public class UserBuildingController {
 
     @GetMapping("{bid}")
     public ResponseEntity<GetBuildingResponse> getBuilding(@PathVariable("id") Long id,
-                                                           @PathVariable("bid") Long buildingId, HttpSession session) {
-        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isPresent() && loggedInUser.get().getId().equals(id)) {
+                                                           @PathVariable("bid") Long buildingId, @RequestHeader("Session-Token") String sessionToken) {
+        User existingUser = userService.findBySessionToken(sessionToken);
+        if (existingUser != null && existingUser.getId().equals(id)) {
             return buildingService.find(id, buildingId)
                     .map(value -> ResponseEntity.ok(GetBuildingResponse.entityToDtoMapper().apply(value)))
                     .orElseGet(() -> ResponseEntity.notFound().build());
@@ -59,11 +59,11 @@ public class UserBuildingController {
     public ResponseEntity<Void> createBuilding(@PathVariable("id") Long id,
                                                @RequestBody CreateBuildingRequest request,
                                                UriComponentsBuilder builder,
-                                               HttpSession session) {
-        Optional<User> loggedInUser = Optional.ofNullable((User) session.getAttribute("user"));
-        if (loggedInUser.isPresent()) {
+                                               @RequestHeader("Session-Token") String sessionToken) {
+        User existingUser = userService.findBySessionToken(sessionToken);
+        if (existingUser != null) {
             Optional<User> user = userService.find(id);
-            if (user.isPresent() && loggedInUser.get().getId().equals(user.get().getId())) {
+            if (user.isPresent() && existingUser.getId().equals(user.get().getId())) {
                 if (buildingService.canBuild(request, id)) {
                     Building building = CreateBuildingRequest
                             .dtoToEntityMapper(user::get)

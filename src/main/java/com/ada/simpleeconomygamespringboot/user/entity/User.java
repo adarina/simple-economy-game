@@ -46,4 +46,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private List<Unit> units;
+
+    @Column(name = "session_token")
+    private String sessionToken;
 }
