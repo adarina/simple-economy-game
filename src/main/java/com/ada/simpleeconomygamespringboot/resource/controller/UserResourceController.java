@@ -3,7 +3,6 @@ package com.ada.simpleeconomygamespringboot.resource.controller;
 import com.ada.simpleeconomygamespringboot.resource.service.ResourceService;
 import com.ada.simpleeconomygamespringboot.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ada.simpleeconomygamespringboot.resource.dto.GetResourcesResponse;
@@ -26,14 +25,13 @@ public class UserResourceController {
     }
 
     @GetMapping
-    public ResponseEntity<GetResourcesResponse> getResources(@PathVariable("id") Long id, @RequestHeader("Session-Token") String sessionToken) {
-        User existingUser = userService.findBySessionToken(sessionToken);
-        if (existingUser.getId().equals(id)) {
-            Optional<User> user = userService.find(id);
+    public ResponseEntity<GetResourcesResponse> getResources(@PathVariable("id") Long id) {
+        Optional<User> user = userService.find(id);
+        if (user.isPresent()) {
             return user.map(value -> ResponseEntity.ok(GetResourcesResponse.entityToDtoMapper().apply(resourceService.findAll(value))))
                     .orElseGet(() -> ResponseEntity.notFound().build());
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.notFound().build();
         }
     }
 }

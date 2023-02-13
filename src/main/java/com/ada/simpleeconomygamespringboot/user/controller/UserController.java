@@ -5,23 +5,28 @@ import com.ada.simpleeconomygamespringboot.resource.service.ResourceService;
 import com.ada.simpleeconomygamespringboot.unit.entity.Unit;
 import com.ada.simpleeconomygamespringboot.unit.entity.UnitBuilder;
 import com.ada.simpleeconomygamespringboot.unit.service.UnitService;
+import com.ada.simpleeconomygamespringboot.user.dto.*;
 import com.ada.simpleeconomygamespringboot.user.service.UserService;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.ada.simpleeconomygamespringboot.resource.entity.ResourceBuilder;
-import com.ada.simpleeconomygamespringboot.user.dto.CreateUserRequest;
-import com.ada.simpleeconomygamespringboot.user.dto.GetUserResponse;
-import com.ada.simpleeconomygamespringboot.user.dto.GetUsersResponse;
 import com.ada.simpleeconomygamespringboot.user.entity.User;
 
-import javax.servlet.http.HttpSession;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/users")
@@ -33,31 +38,33 @@ public class UserController {
 
     private final UnitService unitService;
 
+    private final AuthenticationManager authorizationManager;
+
+
+    @Value("${secret.key}")
+    private String KEY;
+
     @Autowired
-    public UserController(UserService userService, ResourceService resourceService, UnitService unitService) {
+    public UserController(UserService userService, ResourceService resourceService, UnitService unitService, AuthenticationManager authorizationManager) {
         this.userService = userService;
         this.resourceService = resourceService;
         this.unitService = unitService;
+        this.authorizationManager = authorizationManager;
     }
 
-    @GetMapping
-    public ResponseEntity<GetUsersResponse> getUsers(@RequestHeader("Session-Token") String sessionToken) {
-        User existingUser = userService.findBySessionToken(sessionToken);
-        if (existingUser != null &&  existingUser.getRole().equals("ADMIN")) {
+    @GetMapping("/all")
+    public ResponseEntity<GetUsersResponse> getUsers() {
         return ResponseEntity.ok(GetUsersResponse.entityToDtoMapper().apply(userService.findAll()));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/all/{id}")
     public ResponseEntity<GetUserResponse> getUser(@PathVariable("id") Long id) {
         return userService.find(id)
                 .map(value -> ResponseEntity.ok(GetUserResponse.entityToDtoMapper().apply(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<Void> createUser(@RequestBody CreateUserRequest request, UriComponentsBuilder builder) {
 
         User user = CreateUserRequest
@@ -66,6 +73,9 @@ public class UserController {
         if (userService.find(user.getUsername()).isPresent()) {
             return ResponseEntity.notFound().build();
         } else {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(request.getPassword());
+            user.setPassword(hashedPassword);
             user = userService.create(user);
 
             Resource resourceMud = ResourceBuilder.aResource().defaultBuildMudEntity(user);
@@ -89,57 +99,41 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id, @RequestHeader("Session-Token") String sessionToken) {
-        User existingUser = userService.findBySessionToken(sessionToken);
-        if (existingUser != null && (existingUser.getId().equals(id) || existingUser.getRole().equals("ADMIN"))) {
-            Optional<User> user = userService.find(id);
-            if (user.isPresent()) {
-                userService.delete(user.get().getId());
-                return ResponseEntity.accepted().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+        Optional<User> user = userService.find(id);
+        if (user.isPresent()) {
+            userService.delete(user.get().getId());
+            return ResponseEntity.accepted().build();
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> loginUser(@RequestBody User user, HttpSession session) {
-        User existingUser = userService.findByUsernameAndPassword(user.getUsername(), user.getPassword());
-        if (existingUser != null) {
-            existingUser.setSessionToken(session.getId());
-            userService.save(existingUser);
-            Map<String, String> response = new HashMap<>();
-            response.put("token", session.getId());
-            response.put("role", existingUser.getRole());
-            response.put("id", existingUser.getId().toString());
-            return ResponseEntity.ok(response);
-        } else {
+    public ResponseEntity<?> loginUser(@RequestBody CreateLoginRequest createLoginRequest) {
+        try {
+            Authentication authenticate = authorizationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(createLoginRequest.getUsername(), createLoginRequest.getPassword()));
+            User user = (User) authenticate.getPrincipal();
+            Algorithm algorithm = Algorithm.HMAC256(KEY);
+            String token = JWT.create()
+                    .withSubject(user.getUsername())
+                    .withIssuer("Eminem")
+                    .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                    .sign(algorithm);
+
+            GetLoginResponse getLoginResponse = new GetLoginResponse(user.getUsername(), token);
+            getLoginResponse.setId(user.getId());
+            getLoginResponse.setRole(user.getRole());
+            return ResponseEntity.ok(getLoginResponse);
+        } catch (UsernameNotFoundException exception) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<Void> logoutUser(@RequestHeader("Session-Token") String sessionToken) {
-        User user = userService.findBySessionToken(sessionToken);
-        if (user != null) {
-            user.setSessionToken(null);
-            userService.save(user);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
-
-    @GetMapping("/check")
-    public ResponseEntity<Void> checkSession(@RequestHeader("Session-Token") String sessionToken) {
-        User user = userService.findBySessionToken(sessionToken);
-        if (user != null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } else {
-            return ResponseEntity.ok().build();
-        }
+    public ResponseEntity<?> logoutUser() {
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -1,12 +1,14 @@
-GET http://localhost:8080/api/users
-
+GET http://localhost:8080/api/users/all
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzcyI6IkVtaW5lbSJ9.GZiPSGXaNHfBmL5dTreZ-d-hvPkcMxGSNiEJaF6cS9E
 ###
 
-GET http://localhost:8080/api/users/1
+GET http://localhost:8080/api/users/all/1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiRW1pbmVtIn0.mE0-rsMQTERwmJxOFzHVdP2kG1tSF8Qa4uc1GpV1Ca
 
 ###
 
 GET http://localhost:8080/api/users/1/resources
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhIiwicm9sZXMiOlsiVVNFUiJdLCJpc3MiOiJFbWluZW0ifQ.x3AMFp7kkzqe9XTWSaIswWB9HTIL0Gw3CpoDH3m6MW8
 
 ###
 
@@ -30,36 +32,39 @@ GET http://localhost:8080/api/users/2/units
 
 ###
 
-POST http://localhost:8080/api/users
+POST http://localhost:8080/api/users/register
 Content-Type: application/json
 
 {
-  "username": "marta",
-  "password": "12",
-  "role": "USER"
+  "username": "e",
+  "password": "e",
+  "role": "ROLE_ADMIN"
 }
 
 ###
-POST http://localhost:8080/api/users
+POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
-  "username": "a",
-  "password": "a",
-  "role": "USER"
+  "username": "w",
+  "password": "w"
+}
+
+###
+POST http://localhost:8080/api/users/register
+Content-Type: application/json
+
+{
+  "username": "d",
+  "password": "d",
+  "role": "ROLE_USER"
 }
 ###
 GET http://localhost:8080/api/users/1/resources
 
-###
 
-POST http://localhost:8080/api/users/login
-Content-Type: application/json
 
-{
-  "username": "marta",
-  "password": "12"
-}
+
 
 ###
 
@@ -67,8 +72,8 @@ POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
-  "username": "a",
-  "password": "a"
+  "username": "e",
+  "password": "e"
 }
 
 ###
@@ -79,6 +84,14 @@ Content-Type: application/json
 {
   "username": "1",
   "password": "1"
+}
+###
+POST http://localhost:8080/api/users/auth/login
+Content-Type: application/json
+
+{
+"username": "1",
+"password": "1"
 }
 
 ###
@@ -94,9 +107,9 @@ POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-"username": "2",
-"password": "2",
-"role": "ADMIN"
+"username": "4",
+"password": "4",
+"role": "ROLE_ADMIN"
 }
 
 ###
@@ -113,7 +126,7 @@ Content-Type: application/json
 DELETE http://localhost:8080/api/users/1
 ###
 
-POST http://localhost:8080/api/users/1/buildings
+POST http://localhost:8080/api/users/2/buildings
 Content-Type: application/json
 
 {
@@ -124,6 +137,7 @@ Content-Type: application/json
 
 POST http://localhost:8080/api/users/1/buildings
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiRW1pbmVtIn0.mE0-rsMQTERwmJxOFzHVdP2kG1tSF8Qa4uc1GpV1Caw
 
 {
   "type": "PIT"
@@ -133,6 +147,7 @@ Content-Type: application/json
 
 POST http://localhost:8080/api/users/1/buildings
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkIiwicm9sZXMiOlsiVVNFUiJdLCJpc3MiOiJFbWluZW0ifQ.Shsd0F-9T9TaVpyC_4olwpdZXCOxNEUA55dpxQKxpCc
 
 {
   "type": "QUARRY"
@@ -142,6 +157,7 @@ Content-Type: application/json
 
 POST http://localhost:8080/api/users/1/buildings
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkIiwicm9sZXMiOlsiVVNFUiJdLCJpc3MiOiJFbWluZW0ifQ.Shsd0F-9T9TaVpyC_4olwpdZXCOxNEUA55dpxQKxpCc
 
 {
   "type": "CAVERN"
@@ -151,6 +167,7 @@ Content-Type: application/json
 
 POST http://localhost:8080/api/users/1/buildings
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkIiwicm9sZXMiOlsiVVNFUiJdLCJpc3MiOiJFbWluZW0ifQ.Shsd0F-9T9TaVpyC_4olwpdZXCOxNEUA55dpxQKxpCc
 
 {
   "type": "CAVE"
@@ -170,10 +187,11 @@ Content-Type: application/json
 
 PUT http://localhost:8080/api/users/1/units/1
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkIiwicm9sZXMiOlsiVVNFUiJdLCJpc3MiOiJFbWluZW0ifQ.Shsd0F-9T9TaVpyC_4olwpdZXCOxNEUA55dpxQKxpCc
 
 {
-  "type": "ORC",
-  "amount": -6
+  "type": "GOBLIN",
+  "amount": 5
 }
 
 ###
