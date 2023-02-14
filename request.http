@@ -46,8 +46,8 @@ POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
-  "username": "w",
-  "password": "w"
+  "username": "d",
+  "password": "d"
 }
 
 ###
@@ -126,8 +126,9 @@ Content-Type: application/json
 DELETE http://localhost:8080/api/users/1
 ###
 
-POST http://localhost:8080/api/users/2/buildings
+POST http://localhost:8080/api/users/1/buildings
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzcyI6IkVtaW5lbSJ9.cfjLaPUjgmpErvwpgmDHeoTqB0kh7USWqNVHthIhl0s
 
 {
   "type": "COTTAGE"

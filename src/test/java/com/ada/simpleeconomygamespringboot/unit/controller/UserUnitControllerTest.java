@@ -7,12 +7,16 @@ import com.ada.simpleeconomygamespringboot.unit.repository.UnitRepository;
 import com.ada.simpleeconomygamespringboot.unit.service.UnitService;
 import com.ada.simpleeconomygamespringboot.user.entity.User;
 import com.ada.simpleeconomygamespringboot.user.entity.UserBuilder;
+import com.ada.simpleeconomygamespringboot.user.repository.UserRepository;
 import com.ada.simpleeconomygamespringboot.user.service.UserService;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.junit.Test;
@@ -21,6 +25,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -57,23 +65,40 @@ public class UserUnitControllerTest {
     @MockBean
     private UnitRepository unitRepository;
 
+    @MockBean
+    private AuthenticationManager authorizationManager;
+
+    @MockBean
+    private UserRepository userRepository;
+
+    @Value("${secret.key}")
+    private String KEY;
+
 
     @Test
     public void givenUserAndUnits_whenGetUnits_thenReturnsUnitsAndOK() throws Exception {
 
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode("tester");
+
         User testUser = UserBuilder
                 .anUser()
                 .withUsername("tester")
-                .withPassword("tester")
-                .withRole("USER")
+                .withPassword(hashedPassword)
+                .withRole("ROLE_USER")
                 .buildUserEntity();
 
-        Field privateIdField = User.class.getDeclaredField("id");
-        privateIdField.setAccessible(true);
-        privateIdField.set(testUser, 1L);
+        Algorithm algorithm = Algorithm.HMAC256(KEY);
+        assert testUser != null;
+        String token = JWT.create()
+                .withSubject(testUser.getUsername())
+                .withIssuer("Eminem")
+                .withClaim("roles", testUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .sign(algorithm);
 
-        MockHttpSession mockSession = new MockHttpSession();
-        mockSession.setAttribute("user", testUser);
+        Field userIdField = User.class.getDeclaredField("id");
+        userIdField.setAccessible(true);
+        userIdField.set(testUser, 1L);
 
         Unit testUnitGoblinArcher = UnitBuilder
                 .anUnit()
@@ -99,8 +124,8 @@ public class UserUnitControllerTest {
         when(unitService.findAll(testUser)).thenReturn(testUnits);
 
         mvc.perform(get("/api/users/1/units")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .session(mockSession))
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.units").isNotEmpty())
                 .andExpect(jsonPath("$.units[0].type").value("GOBLIN"))
@@ -112,25 +137,33 @@ public class UserUnitControllerTest {
     @Test
     public void givenUserToGoblinArcherInUnit_whenUpdateUnit_thenReturnsAccepted() throws Exception {
 
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode("tester");
+
         User testUser = UserBuilder
                 .anUser()
                 .withUsername("tester")
-                .withPassword("tester")
-                .withRole("USER")
+                .withPassword(hashedPassword)
+                .withRole("ROLE_USER")
                 .buildUserEntity();
 
-        Field privateIdField = User.class.getDeclaredField("id");
-        privateIdField.setAccessible(true);
-        privateIdField.set(testUser, 1L);
+        Algorithm algorithm = Algorithm.HMAC256(KEY);
+        assert testUser != null;
+        String token = JWT.create()
+                .withSubject(testUser.getUsername())
+                .withIssuer("Eminem")
+                .withClaim("roles", testUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .sign(algorithm);
 
-        MockHttpSession mockSession = new MockHttpSession();
-        mockSession.setAttribute("user", testUser);
+        Field userIdField = User.class.getDeclaredField("id");
+        userIdField.setAccessible(true);
+        userIdField.set(testUser, 1L);
 
         Unit testUnitGoblinArcher = UnitBuilder
                 .anUnit()
                 .defaultBuildGoblinArcherEntity(testUser);
 
-        privateIdField = Unit.class.getDeclaredField("id");
+        Field privateIdField = Unit.class.getDeclaredField("id");
         privateIdField.setAccessible(true);
         privateIdField.set(testUnitGoblinArcher, 1L);
 
@@ -140,8 +173,8 @@ public class UserUnitControllerTest {
 
         mvc.perform(put("/api/users/1/units/1")
                         .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .session(mockSession)
                         .content(objectMapper.writeValueAsString(testUnitGoblinArcher)))
                 .andExpect(status().isAccepted());
     }
@@ -149,19 +182,27 @@ public class UserUnitControllerTest {
     @Test
     public void givenUserAndUnit_whenGetUnit_thenReturnsUnitAndOK() throws Exception {
 
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode("tester");
+
         User testUser = UserBuilder
                 .anUser()
                 .withUsername("tester")
-                .withPassword("tester")
-                .withRole("USER")
+                .withPassword(hashedPassword)
+                .withRole("ROLE_USER")
                 .buildUserEntity();
 
-        Field privateIdField = User.class.getDeclaredField("id");
-        privateIdField.setAccessible(true);
-        privateIdField.set(testUser, 1L);
+        Algorithm algorithm = Algorithm.HMAC256(KEY);
+        assert testUser != null;
+        String token = JWT.create()
+                .withSubject(testUser.getUsername())
+                .withIssuer("Eminem")
+                .withClaim("roles", testUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .sign(algorithm);
 
-        MockHttpSession mockSession = new MockHttpSession();
-        mockSession.setAttribute("user", testUser);
+        Field userIdField = User.class.getDeclaredField("id");
+        userIdField.setAccessible(true);
+        userIdField.set(testUser, 1L);
 
         Unit testUnitGoblinArcher = UnitBuilder
                 .anUnit()
@@ -176,8 +217,8 @@ public class UserUnitControllerTest {
 
         assert testUnitGoblinArcher != null;
         mvc.perform(get("/api/users/1/units/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .session(mockSession))
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.type").isNotEmpty())
                 .andExpect(jsonPath("$.type").value(testUnitGoblinArcher.getType()));
@@ -186,23 +227,31 @@ public class UserUnitControllerTest {
     @Test
     public void givenWrongRequest_whenGetUnit_thenReturnsNotFound() throws Exception {
 
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode("tester");
+
         User testUser = UserBuilder
                 .anUser()
                 .withUsername("tester")
-                .withPassword("tester")
-                .withRole("USER")
+                .withPassword(hashedPassword)
+                .withRole("ROLE_USER")
                 .buildUserEntity();
 
-        Field privateIdField = User.class.getDeclaredField("id");
-        privateIdField.setAccessible(true);
-        privateIdField.set(testUser, 1L);
+        Algorithm algorithm = Algorithm.HMAC256(KEY);
+        assert testUser != null;
+        String token = JWT.create()
+                .withSubject(testUser.getUsername())
+                .withIssuer("Eminem")
+                .withClaim("roles", testUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .sign(algorithm);
 
-        MockHttpSession mockSession = new MockHttpSession();
-        mockSession.setAttribute("user", testUser);
+        Field userIdField = User.class.getDeclaredField("id");
+        userIdField.setAccessible(true);
+        userIdField.set(testUser, 1L);
 
         mvc.perform(get("/api/users/1/units/6")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .session(mockSession))
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 }
