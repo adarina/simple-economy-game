@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+  app-server:
+    build:
+      context: simple-economy-game-spring-boot
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/simple_economy_game_mysql?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ada
+      SPRING_DATASOURCE_PASSWORD: ada
+    networks:
+      - backend
+      - frontend
+
+  app-client:
+    build:
+      context: simple-economy-game-angular
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    restart: always
+    depends_on:
+      - app-server
+    networks:
+      - frontend
+
+  db:
+    image: mysql:8.0.19
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: simple_economy_game_mysql
+      MYSQL_USER: ada
+      MYSQL_PASSWORD: ada
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - backend
+
+networks:
+  backend:
+  frontend:
