@@ -105,10 +105,10 @@ public class UserResourceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resources").isNotEmpty())
                 .andExpect(jsonPath("$.resources[0].type").value("MUD"))
-                .andExpect(jsonPath("$.resources[0].amount").value(4000000))
+                .andExpect(jsonPath("$.resources[0].amount").value(9000))
                 .andExpect(jsonPath("$.resources[1].type").value("STONE"))
-                .andExpect(jsonPath("$.resources[1].amount").value(1000000))
+                .andExpect(jsonPath("$.resources[1].amount").value(5000))
                 .andExpect(jsonPath("$.resources[2].type").value("MEAT"))
-                .andExpect(jsonPath("$.resources[2].amount").value(1000000));
+                .andExpect(jsonPath("$.resources[2].amount").value(6000));
     }
 }

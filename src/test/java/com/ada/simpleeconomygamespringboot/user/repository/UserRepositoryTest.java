@@ -2,13 +2,11 @@ package com.ada.simpleeconomygamespringboot.user.repository;
 
 import com.ada.simpleeconomygamespringboot.user.entity.User;
 import com.ada.simpleeconomygamespringboot.user.entity.UserBuilder;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
@@ -16,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
+@SpringBootTest
+@AutoConfigureTestDatabase
 public class UserRepositoryTest {
 
     @Autowired

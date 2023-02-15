@@ -6,18 +6,17 @@ import com.ada.simpleeconomygamespringboot.user.entity.User;
 import com.ada.simpleeconomygamespringboot.user.entity.UserBuilder;
 import com.ada.simpleeconomygamespringboot.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
+@SpringBootTest
+@AutoConfigureTestDatabase
 public class UnitRepositoryTest {
 
     @Autowired
