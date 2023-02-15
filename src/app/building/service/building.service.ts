@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, pipe } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AppConstants } from 'src/app/common/app.constants';
 import { GetBuildingResponse } from '../dto/get-building-response';
 import { Building } from '../model/building';
 
@@ -15,8 +16,8 @@ export class BuildingService {
   getBuildings(name: string): Observable<Array<Building>> {
     let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
-    headers = headers.set('Data-Type', 'json');
-    return this._http.get<GetBuildingResponse>('http://localhost:8080/api/users/' + user.id + '/buildings', { headers }).
+    headers = headers.set('Authorization', 'Bearer ' + user.token);
+    return this._http.get<GetBuildingResponse>(AppConstants.API_BASE_URL + user.id + '/buildings', { headers }).
       pipe(map(value => {
         let buildings = new Array<Building>();
         value.buildings.forEach(building => {
@@ -29,16 +30,15 @@ export class BuildingService {
   addBuilding(type: string) {
     let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
-    headers = headers.set('Data-Type', 'json');
+    headers = headers.set('Authorization', 'Bearer ' + user.token);
     let building: Building = new Building(null, type);
-    console.log(building)
-    return this._http.post('http://localhost:8080/api/users/' + user.id + '/buildings', building, { headers });
+    return this._http.post(AppConstants.API_BASE_URL + user.id + '/buildings', building, { headers });
   }
 
   getBuilding(id: number): Observable<Building> {
     let user = JSON.parse(localStorage.getItem('user'));
     let headers = new HttpHeaders();
-    headers = headers.set('Data-Type', 'json');
-    return this._http.get<Building>('http://localhost:8080/api/users/' + user.id + '/buildings/' + id, { headers })
+    headers = headers.set('Authorization', 'Bearer ' + user.token);
+    return this._http.get<Building>(AppConstants.API_BASE_URL + user.id + '/buildings/' + id, { headers })
   }
 }

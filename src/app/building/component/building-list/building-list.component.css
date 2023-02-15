@@ -19,8 +19,9 @@
 
 .building-list {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 143px;
+    grid-gap: 20px 20px;
+    padding: 20px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     font-size: 20px;
     border-bottom: 4px solid rgb(197, 141, 21);
     border-top: 4px solid rgb(197, 141, 21);
@@ -30,10 +31,26 @@
 }
 
 .building-shop {
-    grid-template-columns: 170px 170px 170px 170px;
+    grid-template-columns: repeat(4, 1fr);
     border-top: 4px solid rgb(48, 54, 35);
     border-bottom: 4px solid rgb(48, 54, 35);
     background-color: rgb(134, 150, 103);
     padding: 25px;
     column-gap: 25px;
+}
+
+.building-shop button {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 4px solid rgb(63, 70, 49);
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.building-shop button:hover {
+    background-color: rgb(98, 109, 75);
+    color: white;
 }

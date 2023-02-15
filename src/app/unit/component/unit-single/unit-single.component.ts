@@ -20,12 +20,6 @@ export class UnitSingleComponent implements OnInit {
 
   _amount: number;
 
-  active: boolean;
-
-  _value: string;
-
-  private _units: Array<Unit>;
-
   constructor(private _unitService: UnitService, private _route: ActivatedRoute) { }
 
   set amount(amount: number) {
@@ -39,36 +33,6 @@ export class UnitSingleComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getUnit(id: number): void {
-    this._unitService.getUnit(id).subscribe(data => {
-      this._unit.amount = data.amount;
-    },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      });
-  }
-
-  editUnit(id: number, type: string): void {
-    if (this._value == 'release') {
-      this._amount = -this._amount;
-    }
-    this._unitService.updateUnit(id, type, this._amount).subscribe(data => {
-      this.getUnit(id);
-      this._amount = null;
-    },
-      error => {
-        console.log(error);
-        console.log(error.status);
-        console.log(error.error);
-      });
-  }
-
-  onItemSelector(value: string) {
-    this._value = value;
-  }
-
   @Input()
   set unit(unit: Unit) {
     this._unit = unit;
@@ -76,5 +40,26 @@ export class UnitSingleComponent implements OnInit {
 
   get unit(): Unit {
     return this._unit;
+  }
+
+  checkTroll(checkType: string): boolean {
+    if (checkType === "TROLL") {
+      return true;
+    }
+    return false;
+  }
+
+  checkGoblin(checkType: string): boolean {
+    if (checkType === "GOBLIN") {
+      return true;
+    }
+    return false;
+  }
+
+  checkOrc(checkType: string): boolean {
+    if (checkType === "ORC") {
+      return true;
+    }
+    return false;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/user/service/user.service';
 import { User } from '../../user/model/user';
 
@@ -8,6 +8,8 @@ import { User } from '../../user/model/user';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
+
 export class LoginComponent implements OnInit {
 
   private _users: Array<User>;
@@ -22,10 +24,11 @@ export class LoginComponent implements OnInit {
 
   public _role: string;
 
+  public _errorMessage: string;
+
   constructor(private _userService: UserService, private _route: ActivatedRoute, private _router: Router) { }
 
   ngOnInit(): void {
-    this.getUsers();
   }
 
   get user(): string {
@@ -70,9 +73,16 @@ export class LoginComponent implements OnInit {
     return this._role;
   }
 
+  set errorMessage(errorMessage: string) {
+    this._errorMessage = errorMessage;
+  }
+
+  get errorMessage(): string {
+    return this._errorMessage;
+  }
+
   onLogin(): void {
-    this.checkUser();
-    this._router.navigateByUrl('/buildings');
+    this.loginUser();
   }
 
   getUsers(): void {
@@ -88,24 +98,39 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  checkUser(): void {
-    console.log(this._users)
-    this._users.forEach(current => {
-      if (current.username === this._login) {
-        let user = {
-          auth: btoa(current.id + ":" + this._password),
-          id: current.id,
-          login: current.username,
-          role: current.role
-          
-        }
-        localStorage.setItem('user', JSON.stringify(user));
-      }
-    })
+  logoutUser(): void {
+    this._userService.logoutUser().subscribe(data => {
+
+    },
+      error => {
+        console.log(error);
+        console.log(error.status);
+        console.log(error.error);
+      });
+    localStorage.removeItem('user');
+    this._router.navigateByUrl('/');
   }
 
   onLogout(): void {
-    this._router.navigateByUrl('/');
-    localStorage.removeItem('user');
+    this.logoutUser();
+  }
+
+  loginUser() {
+
+    let payload = { username: this._login, password: this._password };
+
+    this._userService.loginUser(payload).subscribe((res: any) => {
+      let user = {
+        login: this._login,
+        id: res.id,
+        role: res.role,
+        token: res.accessToken,
+      }
+      localStorage.setItem('user', JSON.stringify(user));
+      this._router.navigateByUrl('/buildings');
+    },
+      () => {
+        this._errorMessage = "Password or username is wrong";
+      })
   }
 }

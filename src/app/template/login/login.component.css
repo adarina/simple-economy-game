@@ -1,34 +1,82 @@
 .login {
     display: grid;
-    grid-template-columns: 435px 174px 84px 174px 84px;
+    display: flex;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     column-gap: 10px;
     position: relative;
     background-color: rgb(105, 84, 84);
     font-weight: bold;
-    padding: 2px;
+    padding: 5px;
+    font-size: 20px;
+    justify-content: flex-end;
 }
 
 .login-name {
     text-align: right;
-    padding: 2px;
+    padding: 5px;
 }
 
 .login-password {
-    padding: 2px;
+    padding: 5px;
     text-align: right;
 }
 
 .logout {
     display: grid;
-    grid-template-columns: 898px 84px;
+    display: flex;
+    grid-template-columns: 1fr 1fr;
     column-gap: 10px;
     position: relative;
     background-color: rgb(105, 84, 84);
     font-weight: bold;
-    padding: 2px;
+    padding: 5px;
+    font-size: 20px;
+    justify-content: flex-end;
 }
 
 .logout-name {
     text-align: right;
-    padding: 2px;
+    padding: 5px;
+}
+
+
+.login input {
+    padding: 1px 10px;
+    border-radius: 10px;
+    border: 4px solid rgb(54, 20, 20);
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.logout input {
+    padding: 1px 10px;
+    border-radius: 10px;
+    border: 4px solid rgb(54, 20, 20);
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.logout input[type="submit"]:hover {
+    background-color: rgb(163, 140, 140);
+    color: white;
+}
+
+.login input[type="submit"]:hover {
+    background-color: rgb(163, 140, 140);
+    color: white;
+}
+
+.register-error {
+    color: red;
+    background-color: rgb(105, 84, 84);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
 }

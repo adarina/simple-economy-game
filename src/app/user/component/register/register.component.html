@@ -11,4 +11,5 @@
         <input type="text" [(ngModel)]="confirmation" name="confirmation" />
         <input type="submit" value="Register" />
     </form>
+    <div class="register-error" *ngIf="errorMessage">{{ errorMessage }}</div>
 </div>

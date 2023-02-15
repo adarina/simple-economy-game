@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { timer } from 'rxjs';
 import { Resource } from 'src/app/resource/model/resource';
 import { ResourceService } from 'src/app/resource/service/resource.service';
 import { Building } from '../../model/building';
@@ -23,14 +22,8 @@ export class BuildingListComponent implements OnInit {
   constructor(private _buildingService: BuildingService, private _route: ActivatedRoute, private _resourceService: ResourceService) { }
 
   ngOnInit(): void {
-    let sub = timer(0, 1000).subscribe(timer => {
-      if (localStorage.getItem('user') === null) {
-        sub.unsubscribe();
-      } else {
-        this.getBuildings();
-        this.getResources();
-      }
-    });
+    this.getBuildings();
+    this.getResources();
   }
 
   getBuildings(): void {

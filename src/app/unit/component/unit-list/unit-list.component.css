@@ -9,7 +9,6 @@
 }
 
 .unit-list {
-    font-size: 20px;
     grid-template-columns: 1fr 1fr 1fr;
     border-bottom: 4px solid rgb(197, 141, 21);
     color: rgb(197, 141, 21);
@@ -20,4 +19,62 @@
 
 .unit-title {
     border-bottom: 4px solid rgb(197, 141, 21);
+}
+
+.unit-title-management,
+.unit-management {
+    display: grid;
+    background-color: rgb(63, 70, 49);
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(134, 150, 103);
+    text-align: center;
+}
+
+.unit-form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+    border-top: 4px solid rgb(48, 54, 35);
+    border-bottom: 4px solid rgb(48, 54, 35);
+    background-color: rgb(134, 150, 103);
+    padding: 25px;
+    column-gap: 25px;
+}
+.unit-form > *:nth-last-child(1) {
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 5;
+  }
+
+.unit-management select, input {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 4px solid rgb(63, 70, 49);
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+
+.unit-management input[type="submit"]:hover {
+    background-color: rgb(98, 109, 75);
+    color: white;
+}
+
+.unit-management input[type="text"] {
+    width: calc(100% - 48px);
+}
+
+.unit-management select {
+    height: calc(100% - 3px);
+}
+
+.register-error {
+    color: red;
+    font-size: 17px;
+    font-weight: normal;
 }

@@ -1,9 +1,10 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { User } from '../model/user';
+import { AppConstants } from 'src/app/common/app.constants';
 import { GetUserResponse } from '../dto/get-user-response';
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -12,16 +13,16 @@ export class UserService {
 
   constructor(private _http: HttpClient) { }
 
-  get authoriztion() {
-    let user = localStorage.getItem('user');
-    let parsed = JSON.parse(user);
-    return parsed.auth;
+  loginUser(payload: any) {
+    return this._http.post(AppConstants.API_BASE_URL + 'login', payload)
   }
 
   getUsers(name: string): Observable<Array<User>> {
-    let headers = new HttpHeaders();
-    headers = headers.set('Data-Type', 'json');
-    return this._http.get<GetUserResponse>('http://localhost:8080/api/users', { headers }).
+    let user = JSON.parse(localStorage.getItem('user'));
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token
+    });
+    return this._http.get<GetUserResponse>(AppConstants.API_BASE_URL + 'all', { headers }).
       pipe(map(value => {
         let users = new Array<User>();
         value.users.forEach(user => {
@@ -32,26 +33,34 @@ export class UserService {
   }
 
   addUser(username: string, password: string) {
-    let headers = new HttpHeaders();
-    headers = headers.set('Data-Type', 'json');
-    let newUser: User = new User(null, username, password, "USER");
-    console.log(newUser)
-    return this._http.post('http://localhost:8080/api/users', newUser, { headers });
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let newUser: User = new User(null, username, password, "ROLE_USER");
+    return this._http.post(AppConstants.API_BASE_URL + 'register', newUser, { headers });
+  }
+
+  logoutUser() {
+    let user = JSON.parse(localStorage.getItem('user'));
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token
+    });
+    return this._http.get(AppConstants.API_BASE_URL + 'logout', { headers });
   }
 
   deleteUser() {
-    let headers = new HttpHeaders();
     let user = JSON.parse(localStorage.getItem('user'));
-    console.log(user.id)
-    //headers = headers.set('Authorization', 'Basic ');
-    return this._http.delete('http://localhost:8080/api/users/' + user.id/*, {headers}*/);
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token
+    });
+    return this._http.delete(AppConstants.API_BASE_URL + 'delete/' + user.id, { headers });
   }
 
   deleteUserById(id: number) {
-    let headers = new HttpHeaders();
     let user = JSON.parse(localStorage.getItem('user'));
-    console.log(user.id)
-    //headers = headers.set('Authorization', 'Basic ');
-    return this._http.delete('http://localhost:8080/api/users/' + id/*, {headers}*/);
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + user.token
+    });
+    return this._http.delete(AppConstants.API_BASE_URL + 'delete/' + id, { headers });
   }
 }

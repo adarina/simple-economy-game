@@ -13,14 +13,20 @@ nav.navigation a {
     display: block;
     color: rgb(156, 112, 112);
     text-align: center;
-    padding: 14px 16px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 4px solid rgb(83, 30, 30);
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
 
 nav.navigation a:hover {
-    background-color: rgb(105, 84, 84);
+    background-color: rgb(156, 112, 112);
+    color: white;
 }
 
 .navigation {
     border-bottom: 4px solid rgb(54, 20, 20);
-    ;
 }

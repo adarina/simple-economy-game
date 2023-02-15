@@ -1,12 +1,6 @@
 <div class="unit-single" *ngIf="unit">
-    Type: {{unit.type}}<br> Amount: {{unit.amount}}<br> Active: {{unit.active}}
-    <form (ngSubmit)="editUnit(unit.id, unit.type)">
-        <div class="unit-form">
-            <input type="text" [(ngModel)]="amount" name="amount" />
-        </div>
-        <div class="unit-button">
-            <input type="submit" value="recruit" (click)="onItemSelector('recruit')" />
-            <input type="submit" value="release" (click)="onItemSelector('release')" />
-        </div>
-    </form>
+    <img [ngClass]="{'dimmed': !unit.active}" *ngIf="checkTroll(unit.type)" src='../../../../assets/images/troll.png'>
+    <img [ngClass]="{'dimmed': !unit.active}" *ngIf="checkGoblin(unit.type)" src='../../../../assets/images/goblin.png'>
+    <img [ngClass]="{'dimmed': !unit.active}" *ngIf="checkOrc(unit.type)" src='../../../../assets/images/orc.png'>
+    <br>{{unit.amount}}
 </div>

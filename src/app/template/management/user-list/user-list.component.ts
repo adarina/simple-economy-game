@@ -12,10 +12,16 @@ export class UserListComponent implements OnInit {
 
   private _users: Array<User>;
 
+  private _role: any;
+
   constructor(private _userService: UserService, private _route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.getUsers()
+    let user = JSON.parse(localStorage.getItem('user'));
+    this._role = user.role
+    if (this._role === 'ROLE_ADMIN') {
+      this.getUsers();
+    }
   }
 
   getUsers() {
@@ -41,10 +47,7 @@ export class UserListComponent implements OnInit {
   }
 
   get user(): boolean {
-    
-    let user = JSON.parse(localStorage.getItem('user'));
-    let role = user.role
-    if (role === 'ADMIN') {
+    if (this._role === 'ROLE_ADMIN') {
       return true;
     }
     return false;

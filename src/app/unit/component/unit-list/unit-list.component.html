@@ -4,3 +4,33 @@
 <div class="unit-list">
     <app-unit-single *ngFor="let unit of units" [unit]="unit"></app-unit-single>
 </div>
+<div class="unit-title-management">
+    <p>Unit Management</p>
+</div>
+<div class="unit-management">
+
+    <form (ngSubmit)="editUnit(selectedUnit.id, selectedUnit.type)">
+
+        <div class="unit-form">
+
+            <div>
+                <select [(ngModel)]="selectedUnit" name="selectedUnit" ngModelOptions="{standalone: true}">
+                    <option *ngFor="let unit of units" [ngValue]="unit">{{unit.type}}</option>
+                </select>
+            </div>
+            <div>
+                <input type="text" [(ngModel)]="amount" name="amount" />
+            </div>
+            <div>
+                <input type="submit" value="Recruit" (click)="onItemSelector('recruit')" />
+            </div>
+            <div>
+                <input type="submit" value="Release" (click)="onItemSelector('release')" />
+            </div>
+            <div class="register-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+        </div>
+      
+    </form>
+ 
+
+</div>

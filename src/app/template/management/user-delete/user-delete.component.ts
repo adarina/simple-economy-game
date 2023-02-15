@@ -16,7 +16,6 @@ export class UserDeleteComponent implements OnInit {
 
   deleteUser(): void {
     this._userService.deleteUser().subscribe(data => {
-      console.log("delete")
       localStorage.removeItem('user');
       this._router.navigateByUrl('/');
     },

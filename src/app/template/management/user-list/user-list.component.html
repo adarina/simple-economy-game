@@ -1,12 +1,13 @@
-<div class="user-is" *ngIf="user">
+<div *ngIf="user">
     <div class="user-title">
-        <p>User List</p>
+        <p>User list</p>
     </div>
     <div class="user-list">
-       <div class="column">Id</div>
-        <div class="column">Username</div>
-        <div class="column">Role</div>
-        <div class="column">Delete</div>
+        <div class="col">Id</div>
+        <div class="col">Username</div>
+        <div class="col">Role</div>
+        <div class="col">Delete</div>
     </div>
     <app-user-single *ngFor="let user of users" [user]="user"></app-user-single>
+    <div class="user-list-bottom"></div>
 </div>

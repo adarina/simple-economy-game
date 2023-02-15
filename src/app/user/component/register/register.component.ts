@@ -17,7 +17,10 @@ export class RegisterComponent implements OnInit {
 
   public _confirmation: string;
 
+  public _errorMessage: string;
+
   ngOnInit(): void {
+    this._errorMessage = "\n";
   }
 
   set username(username: string) {
@@ -26,6 +29,14 @@ export class RegisterComponent implements OnInit {
 
   get username(): string {
     return this._username;
+  }
+
+  set errorMessage(errorMessage: string) {
+    this._errorMessage = errorMessage;
+  }
+
+  get errorMessage(): string {
+    return this._errorMessage;
   }
 
   set password(password: string) {
@@ -44,12 +55,11 @@ export class RegisterComponent implements OnInit {
     return this._confirmation;
   }
 
-
   registerUser(): void {
     if (this._confirmation === "") {
-      prompt("Confirm Password is required");
+      this._errorMessage = "Confirm password is required";
     } else if (this._password === "") {
-      prompt("Password is required");
+      this._errorMessage = "Password is required";
     } else if (this._password === this._confirmation) {
       this._userService.addUser(this._username, this._password).subscribe(data => {
         window.location.reload();
@@ -58,9 +68,10 @@ export class RegisterComponent implements OnInit {
           console.log(error);
           console.log(error.status);
           console.log(error.error);
+          this._errorMessage = "An error occurred while registering the user.";
         });
     } else {
-      prompt("Passwords must match");
+      this._errorMessage = "Passwords must match";
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { User } from 'src/app/user/model/user';
 import { UserService } from 'src/app/user/service/user.service';
 
@@ -32,26 +32,25 @@ export class UserSingleComponent implements OnInit {
 
   deleteUser(id: number): void {
     let user = JSON.parse(localStorage.getItem('user'));
-    this._userService.deleteUserById(id).subscribe(data => { 
-      if (id === user.id) {
+    this._userService.deleteUserById(id).subscribe(data => {
+      if (id == user.id) {
         localStorage.removeItem('user');
         this._router.navigateByUrl('/');
       } else {
         let currentUrl = this._router.url;
-        this._router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-          this._router.navigate([currentUrl]); 
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this._router.navigate([currentUrl]);
         });
       }
     },
-    error => {
-      console.log(error); 
-      console.log(error.status); 
-      console.log(error.error);
-    });
+      error => {
+        console.log(error);
+        console.log(error.status);
+        console.log(error.error);
+      });
   }
 
   onItemSelector(value: string) {
     this._value = value;
   }
-
 }
