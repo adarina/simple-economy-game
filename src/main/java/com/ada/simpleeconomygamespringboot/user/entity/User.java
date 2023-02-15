@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User implements Serializable, UserDetails {
 
     @Id
