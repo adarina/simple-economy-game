@@ -5,15 +5,15 @@ A multi-module web application is a simple economic game that allows players to 
 ## Business layer ##
 The business layer provides the following operations via a REST API:
 
-*Retrieve a list of built buildings (for a logged-in player)
-*Retrieve a list of available resources (for a logged-in player)
-*Retrieve a list of army units (for a logged-in player)
-*Build a building (for a logged-in player)
-*Recruit a specified number of chosen units (for a logged-in player)
-*Release a specified number of chosen units (for a logged-in player)
-*Retrieve a list of players (for admin only)
-*Create a new user (registration for an unauthenticated user)
-*Delete a user (for admin or logged-in user)
+* Retrieve a list of built buildings (for a logged-in player)
+* Retrieve a list of available resources (for a logged-in player)
+* Retrieve a list of army units (for a logged-in player)
+* Build a building (for a logged-in player)
+* Recruit a specified number of chosen units (for a logged-in player)
+* Release a specified number of chosen units (for a logged-in player)
+* Retrieve a list of players (for admin only)
+* Create a new user (registration for an unauthenticated user)
+* Delete a user (for admin or logged-in user)
 
 The implementation of these operations includes verification of their feasibility, such as whether the player can afford a specific unit or has the required building. The resource and unit states are updated periodically (`@Scheduled` mechanism), and in the event that the player cannot afford to pay for the units, desertion occurs. Only those units that have not been paid for will desert.
 
@@ -23,15 +23,15 @@ The code has been tested with unit tests.
 
 The view layer provides the following views:
 
-Registration:
+Registration
 
 ![Alt text](/img/localhost_8081.png?raw=true)
 
-Buildings management:
+Buildings management
 
 ![Alt text](/img/localhost_8081_buildings.png?raw=true)
 
-Units management:
+Units management
 
 ![Alt text](/img/localhost_8081_units.png?raw=true)
 
